@@ -1,7 +1,7 @@
 tbs2910-patches
 ===============
 
-linux kernel and u-boot patches for the TBS2910 Matrix single board computer
+Linux kernel and u-boot patches for the TBS2910 Matrix single board computer
 
 
 ### Files here
@@ -11,6 +11,7 @@ linux kernel and u-boot patches for the TBS2910 Matrix single board computer
  - tested on commit 4d16f67e7ba1a69929b55852f1a274c457a0db27
 - **linux.patch**
  - apply this patch to the latest stable kernel source tree to get a functional linux kernel
+ - tested on tag v3.14.4 
 
 ### u-boot patch and build how to
 ---
