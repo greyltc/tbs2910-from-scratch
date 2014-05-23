@@ -1,0 +1,67 @@
+diff --git a/arch/arm/include/asm/arch-mx6/imx-regs.h b/arch/arm/include/asm/arch-mx6/imx-regs.h
+index 1f19727..7d2976b 100644
+--- a/arch/arm/include/asm/arch-mx6/imx-regs.h
++++ b/arch/arm/include/asm/arch-mx6/imx-regs.h
+@@ -83,7 +83,7 @@
+ #define MMDC1_ARB_END_ADDR              0xFFFFFFFF
+ #else
+ #define MMDC0_ARB_BASE_ADDR             0x10000000
+-#define MMDC0_ARB_END_ADDR              0x7FFFFFFF
++#define MMDC0_ARB_END_ADDR              0x8FFFFFFF
+ #define MMDC1_ARB_BASE_ADDR             0x80000000
+ #define MMDC1_ARB_END_ADDR              0xFFFFFFFF
+ #endif
+diff --git a/board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg b/board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg
+index bb6c60b..4737c9d 100644
+--- a/board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg
++++ b/board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg
+@@ -101,8 +101,8 @@ DATA 4 0x021b002c 0x000026D2
+ DATA 4 0x021b0030 0x005A1023
+ DATA 4 0x021b0008 0x09444040
+ DATA 4 0x021b0004 0x00025576
+-DATA 4 0x021b0040 0x00000027
+-DATA 4 0x021b0000 0x831A0000
++DATA 4 0x021b0040 0x00000047
++DATA 4 0x021b0000 0x841A0000
+ 
+ DATA 4 0x021b001c 0x04088032
+ DATA 4 0x021b001c 0x0408803A
+diff --git a/boards.cfg b/boards.cfg
+index d31bdba..8a00710 100644
+--- a/boards.cfg
++++ b/boards.cfg
+@@ -325,7 +325,7 @@ Active  arm         armv7          mx6         embest          mx6boards
+ Active  arm         armv7          mx6         freescale       mx6qarm2            mx6qarm2                              mx6qarm2:IMX_CONFIG=board/freescale/mx6qarm2/imximage.cfg                                                                         Jason Liu <r64343@freescale.com>
+ Active  arm         armv7          mx6         freescale       mx6qsabreauto       mx6qsabreauto                         mx6qsabreauto:IMX_CONFIG=board/freescale/mx6qsabreauto/imximage.cfg,MX6Q                                                          Fabio Estevam <fabio.estevam@freescale.com>
+ Active  arm         armv7          mx6         freescale       mx6sabresd          mx6dlsabresd                          mx6sabresd:IMX_CONFIG=board/boundary/nitrogen6x/nitrogen6dl.cfg,MX6DL                                                             Fabio Estevam <fabio.estevam@freescale.com>
+-Active  arm         armv7          mx6         freescale       mx6sabresd          mx6qsabresd                           mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q                                                           Fabio Estevam <fabio.estevam@freescale.com>
++Active  arm         armv7          mx6         freescale       mx6sabresd          mx6qsabresd                           mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q,DDR_MB=2048                                                           Fabio Estevam <fabio.estevam@freescale.com>
+ Active  arm         armv7          mx6         freescale       mx6slevk            mx6slevk                              mx6slevk:IMX_CONFIG=board/freescale/mx6slevk/imximage.cfg,MX6SL                                                                   Fabio Estevam <fabio.estevam@freescale.com>
+ Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
+ Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
+diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
+index e59a3b4..8133e79 100644
+--- a/include/configs/mx6sabre_common.h
++++ b/include/configs/mx6sabre_common.h
+@@ -63,7 +63,7 @@
+ #define IMX_FEC_BASE			ENET_BASE_ADDR
+ #define CONFIG_FEC_XCV_TYPE		RGMII
+ #define CONFIG_ETHPRIME			"FEC"
+-#define CONFIG_FEC_MXC_PHYADDR		1
++#define CONFIG_FEC_MXC_PHYADDR		4
+ 
+ #define CONFIG_PHYLIB
+ #define CONFIG_PHY_ATHEROS
+diff --git a/include/configs/mx6sabresd.h b/include/configs/mx6sabresd.h
+index 0fa6573..46eaca4 100644
+--- a/include/configs/mx6sabresd.h
++++ b/include/configs/mx6sabresd.h
+@@ -21,7 +21,7 @@
+ #elif defined(CONFIG_MX6DL)
+ #define CONFIG_DEFAULT_FDT_FILE	"imx6dl-sabresd.dtb"
+ #endif
+-#define PHYS_SDRAM_SIZE		(1u * 1024 * 1024 * 1024)
++#define PHYS_SDRAM_SIZE		(2u * 1024 * 1024 * 1024)
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
