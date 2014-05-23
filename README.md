@@ -1,4 +1,4 @@
-tbs2910_patches
+tbs2910-patches
 ===============
 
 linux kernel and u-boot patches for the TBS2910 Matrix single board computer
