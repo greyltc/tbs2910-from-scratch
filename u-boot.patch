@@ -27,20 +27,19 @@ index bb6c60b..4737c9d 100644
  DATA 4 0x021b001c 0x04088032
  DATA 4 0x021b001c 0x0408803A
 diff --git a/boards.cfg b/boards.cfg
-index d31bdba..8a00710 100644
+index d31bdba..c0d3a9d 100644
 --- a/boards.cfg
 +++ b/boards.cfg
-@@ -325,7 +325,7 @@ Active  arm         armv7          mx6         embest          mx6boards
- Active  arm         armv7          mx6         freescale       mx6qarm2            mx6qarm2                              mx6qarm2:IMX_CONFIG=board/freescale/mx6qarm2/imximage.cfg                                                                         Jason Liu <r64343@freescale.com>
+@@ -326,6 +326,7 @@ Active  arm         armv7          mx6         freescale       mx6qarm2
  Active  arm         armv7          mx6         freescale       mx6qsabreauto       mx6qsabreauto                         mx6qsabreauto:IMX_CONFIG=board/freescale/mx6qsabreauto/imximage.cfg,MX6Q                                                          Fabio Estevam <fabio.estevam@freescale.com>
  Active  arm         armv7          mx6         freescale       mx6sabresd          mx6dlsabresd                          mx6sabresd:IMX_CONFIG=board/boundary/nitrogen6x/nitrogen6dl.cfg,MX6DL                                                             Fabio Estevam <fabio.estevam@freescale.com>
--Active  arm         armv7          mx6         freescale       mx6sabresd          mx6qsabresd                           mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q                                                           Fabio Estevam <fabio.estevam@freescale.com>
-+Active  arm         armv7          mx6         freescale       mx6sabresd          mx6qsabresd                           mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q,DDR_MB=2048                                                           Fabio Estevam <fabio.estevam@freescale.com>
+ Active  arm         armv7          mx6         freescale       mx6sabresd          mx6qsabresd                           mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q                                                           Fabio Estevam <fabio.estevam@freescale.com>
++Active  arm         armv7          mx6         freescale       mx6sabresd          tbs2910                               mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q,DDR_MB=2048       
  Active  arm         armv7          mx6         freescale       mx6slevk            mx6slevk                              mx6slevk:IMX_CONFIG=board/freescale/mx6slevk/imximage.cfg,MX6SL                                                                   Fabio Estevam <fabio.estevam@freescale.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..8133e79 100644
+index e59a3b4..1d54f13 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -63,7 +63,7 @@
@@ -52,6 +51,21 @@ index e59a3b4..8133e79 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
+@@ -173,13 +173,13 @@
+ 		"root=/dev/nfs " \
+ 		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
+ 	"netboot=echo Booting from net ...; " \
+-		"run netargs; " \
+ 		"if test ${ip_dyn} = yes; then " \
+ 			"setenv get_cmd dhcp; " \
+ 		"else " \
+ 			"setenv get_cmd tftp; " \
+ 		"fi; " \
+ 		"${get_cmd} ${image}; " \
++		"run netargs; " \
+ 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+ 			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
+ 				"bootz ${loadaddr} - ${fdt_addr}; " \
 diff --git a/include/configs/mx6sabresd.h b/include/configs/mx6sabresd.h
 index 0fa6573..46eaca4 100644
 --- a/include/configs/mx6sabresd.h

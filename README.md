@@ -26,7 +26,7 @@ export CROSS_COMPILE=$YOUR_CROSSCOMPILER_PREFIX
 export PATH="$YOUR_CROSS_COMPILER_PATH:${PATH}"
 make clean
 make mrproper
-make mx6qsabresd_config
+make tbs2910_config
 make
 ```
 Now you have your u-boot binaries in .
