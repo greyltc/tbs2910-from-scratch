@@ -42,7 +42,7 @@ git apply linux.patch
 export ARCH=arm
 export CROSS_COMPILE=$YOUR_CROSSCOMPILER_PREFIX
 export PATH="$YOUR_CROSS_COMPILER_PATH:${PATH}"
-make clean
+make distclean
 make mrproper
 make imx_v6_v7_defconfig
 make zImage
