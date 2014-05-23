@@ -15,6 +15,7 @@ Linux kernel and u-boot patches for the TBS2910 Matrix single board computer
 
 ### u-boot patch and build how to
 ---
+Step 1: Setup your cross compiler. Before you begin you should know your crosscomiler prefix and its build tool path.
 ```
 git clone git://git.denx.de/u-boot.git
 cd u-boot
@@ -32,6 +33,7 @@ Now you have your u-boot binaries in .
 
 ### linux kernal patch and build how to
 ---
+Step 1: Setup your cross compiler. Before you begin you should know your crosscomiler prefix and its build tool path.
 ```
 git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 cd linux-stable
