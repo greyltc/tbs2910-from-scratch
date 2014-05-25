@@ -27,7 +27,7 @@ index bb6c60b..4737c9d 100644
  DATA 4 0x021b001c 0x04088032
  DATA 4 0x021b001c 0x0408803A
 diff --git a/boards.cfg b/boards.cfg
-index d31bdba..c0d3a9d 100644
+index 221b7f8..99eb295 100644
 --- a/boards.cfg
 +++ b/boards.cfg
 @@ -326,6 +326,7 @@ Active  arm         armv7          mx6         freescale       mx6qarm2
@@ -39,7 +39,7 @@ index d31bdba..c0d3a9d 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..1d54f13 100644
+index e59a3b4..3208be6 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -63,7 +63,7 @@
@@ -51,7 +51,25 @@ index e59a3b4..1d54f13 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
-@@ -173,13 +173,13 @@
+@@ -148,16 +148,12 @@
+ 	EMMC_ENV	  \
+ 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+ 		"root=${mmcroot}\0" \
+-	"loadbootscript=" \
+-		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
+ 	"bootscript=echo Running bootscript from mmc ...; " \
+ 		"source\0" \
+-	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+-	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+ 	"mmcboot=echo Booting from mmc ...; " \
+ 		"run mmcargs; " \
+ 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+-			"if run loadfdt; then " \
++			"if fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}; then " \
+ 				"bootz ${loadaddr} - ${fdt_addr}; " \
+ 			"else " \
+ 				"if test ${boot_fdt} = try; then " \
+@@ -173,13 +169,13 @@
  		"root=/dev/nfs " \
  		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
  	"netboot=echo Booting from net ...; " \
@@ -66,8 +84,30 @@ index e59a3b4..1d54f13 100644
  		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
  			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
  				"bootz ${loadaddr} - ${fdt_addr}; " \
+@@ -197,10 +193,10 @@
+ #define CONFIG_BOOTCOMMAND \
+ 	"mmc dev ${mmcdev};" \
+ 	"if mmc rescan; then " \
+-		"if run loadbootscript; then " \
++		"if fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script}; then " \
+ 		"run bootscript; " \
+ 		"else " \
+-			"if run loadimage; then " \
++			"if fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}; then " \
+ 				"run mmcboot; " \
+ 			"else run netboot; " \
+ 			"fi; " \
+@@ -214,7 +210,7 @@
+ #define CONFIG_SYS_HUSH_PARSER
+ #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
+ #define CONFIG_AUTO_COMPLETE
+-#define CONFIG_SYS_CBSIZE              256
++#define CONFIG_SYS_CBSIZE              512
+ 
+ /* Print Buffer Size */
+ #define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
 diff --git a/include/configs/mx6sabresd.h b/include/configs/mx6sabresd.h
-index 0fa6573..46eaca4 100644
+index 0fa6573..e3a90d0 100644
 --- a/include/configs/mx6sabresd.h
 +++ b/include/configs/mx6sabresd.h
 @@ -21,7 +21,7 @@
@@ -79,3 +119,12 @@ index 0fa6573..46eaca4 100644
  
  #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
  
+@@ -29,7 +29,7 @@
+ 
+ #define CONFIG_SYS_FSL_USDHC_NUM	3
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+-#define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC3 */
++#define CONFIG_SYS_MMC_ENV_DEV		2	/* SDHC3 */
+ #endif
+ 
+ /* Framebuffer */
