@@ -1,7 +1,9 @@
 #!/bin/sh
 
+#sebootstrap second stage (extracts and sets up all installed packages)
 /debootstrap/debootstrap --second-stage --verbose
 
+#networking stuff
 cat  > /etc/network/interfaces.d/eth0 <<END
 auto eth0
 allow-hotplug eth0
@@ -23,12 +25,15 @@ END
 
 echo matrix > /etc/hostname
 
+#allows shell login via UART port
 echo 'T0:2345:respawn:/sbin/getty -L ttymxc0 115200 linux' >> /etc/inittab
 sed -i 's/^\([1-6]:.* tty[1-6]\)/#\1/' /etc/inittab
 
+#setup some local specific things
 dpkg-reconfigure locales
 dpkg-reconfigure tzdata
 
+#for software updates
 cat > /etc/apt/sources.list << END
 deb http://http.debian.net/debian sid main contrib non-free
 deb-src http://http.debian.net/debian sid main contrib non-free
