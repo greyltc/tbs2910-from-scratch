@@ -36,7 +36,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - 4 Cores of the CPU
  - Operating frequency untested
 
-### Noteworthy things that probably/definately don't work
+### Noteworthy things that probably/definately don't currently work
 ---
 - Built in WiFi
 - The fan
