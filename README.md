@@ -40,7 +40,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 ---
 - Built in WiFi
 - The fan
-- The mini-pci port
+- The Mini PCI Express slot
 - eMMC access in Linux
 - SD card access in Linux
 - Volume buttons
