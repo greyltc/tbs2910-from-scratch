@@ -2,7 +2,7 @@ tbs2910-patches
 ===============
 
 Everything you need to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer:
-1. [Wiki containing instructions](https://github.com/l3iggs/tbs2910-patches/wiki)  
+1. [Wiki containing instructions](https://github.com/l3iggs/tbs2910-from-scratch/wiki)  
 2. u-boot patches  
 3. Kernel config and code patches  
 
@@ -20,4 +20,4 @@ Everything you need to get Debian Sid, and a bleeding edge kernel and u-boot run
 
 ### Usage
 ---
-Read the wiki: https://github.com/l3iggs/tbs2910-patches/wiki
+Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
