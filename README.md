@@ -14,13 +14,10 @@ Every once in a great while I might [post binary release packages](https://githu
 ---
 - **u-boot.patch**
  - apply this patch to the latest vanilla version of the u-boot source tree to get a u-boot binary supporting 2GiB SDRAM and networking
- - tested on u-boot U-Boot version 2014.07-rc1-00333-g9665fa8 (the latest as of 2014-05-25)
 - **linux.patch**
  - apply this patch to the latest stable kernel source tree to get a functional linux kernel
- - tested on kernel tag v3.14.4
 - **linuxConfig.patch**
  - This patch applies to arch/arm/configs/imx_v6_v7_defconfig to enable some features of the TBS2910
- - tested on kernel tag v3.14.4 
 - **fsBootstrap.sh**
  - This shell script completes the Debian file system bootstraping and makes the device usable.
 
