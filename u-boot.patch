@@ -39,7 +39,7 @@ index 221b7f8..8781150 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..a8fbcf1 100644
+index e59a3b4..555352c 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -63,7 +63,7 @@
@@ -51,7 +51,7 @@ index e59a3b4..a8fbcf1 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
-@@ -99,20 +99,19 @@
+@@ -99,20 +99,20 @@
  
  #ifdef CONFIG_SUPPORT_EMMC_BOOT
  #define EMMC_ENV \
@@ -74,10 +74,11 @@ index e59a3b4..a8fbcf1 100644
  				"setexpr fw_sz ${fw_sz} + 1; "	\
  				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
 -				"mmc close ${emmcdev} 1; " \
++				"mmc partconf ${mmc_uboot_dev} 0 ${mmc_uboot_part} 0; " \
  			"fi; "	\
  		"fi\0"
  #else
-@@ -125,39 +124,26 @@
+@@ -125,39 +125,26 @@
  	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
  	"fdt_addr=0x18000000\0" \
  	"boot_fdt=try\0" \
@@ -124,7 +125,7 @@ index e59a3b4..a8fbcf1 100644
  				"bootz ${loadaddr} - ${fdt_addr}; " \
  			"else " \
  				"if test ${boot_fdt} = try; then " \
-@@ -169,17 +155,21 @@
+@@ -169,17 +156,21 @@
  		"else " \
  			"bootz; " \
  		"fi;\0" \
@@ -150,7 +151,7 @@ index e59a3b4..a8fbcf1 100644
  		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
  			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
  				"bootz ${loadaddr} - ${fdt_addr}; " \
-@@ -195,12 +185,12 @@
+@@ -195,12 +186,12 @@
  		"fi;\0"
  
  #define CONFIG_BOOTCOMMAND \
@@ -167,7 +168,7 @@ index e59a3b4..a8fbcf1 100644
  				"run mmcboot; " \
  			"else run netboot; " \
  			"fi; " \
-@@ -214,7 +204,7 @@
+@@ -214,7 +205,7 @@
  #define CONFIG_SYS_HUSH_PARSER
  #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
  #define CONFIG_AUTO_COMPLETE
