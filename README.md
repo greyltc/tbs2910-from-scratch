@@ -4,13 +4,13 @@ tbs2910-from-scratch
 Everything you need under one roof to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer:  
 1. [Wiki containing instructions](https://github.com/l3iggs/tbs2910-from-scratch/wiki)  
 2. [u-boot patch](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/u-boot.patch)   
-3. [Kernel config]() and [code patches]()  
-4. [Debian bootstrap script]()
+3. [Kernel config](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/linuxConfig.patch) and [code patches](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/linux.patch)  
+4. [Debian bootstrap script](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/fsBootstrap.sh)
 
-I'm working on this project in my spare time because I like the product. I like it because it's relatively inexpensive, low power, decent hardware that seems to have some non-zero community support and it's semi-open source (the schematic and some software is released, TBS please release the BOM and all hardware design files).
+I'm posting this "weekend project" because I like the product. I like it because it's relatively inexpensive, low power, decent hardware that seems to have some non-zero community support and it's semi-open source (the schematic and some software is released. TBS, please release the BOM and all hardware design files).
 
 Every once in a great while I will [post binary release packages](https://github.com/l3iggs/tbs2910-from-scratch/releases) containing u-boot.imx, zImage and imx6q-sabresd.dtb  
-### Files here
+### Files in this project
 ---
 - **u-boot.patch**
  - apply this patch to the latest vanilla version of the u-boot source tree to get a u-boot binary supporting 2GiB SDRAM and networking
