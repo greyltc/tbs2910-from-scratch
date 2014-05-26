@@ -51,7 +51,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
   - SPDIF audio out
   - Analog audio out
 
-### Untested things
+### Untested things that have a slightly lower chance of being broken 
 ---
 - GPIO
 - IRDA port
