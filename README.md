@@ -1,11 +1,11 @@
 tbs2910-from-scratch
 ===============
 
-Everything you need to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer:  
+Everything you need under one roof to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer:  
 1. [Wiki containing instructions](https://github.com/l3iggs/tbs2910-from-scratch/wiki)  
-2. u-boot patches  
-3. Kernel config and code patches  
-4. Debian bootstrap script
+2. [u-boot patch](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/u-boot.patch)   
+3. [Kernel config]() and [code patches]()  
+4. [Debian bootstrap script]()
 
 I'm working on this project in my spare time because I like the product. I like it because it's relatively inexpensive, low power, decent hardware that seems to have some non-zero community support and it's semi-open source (the schematic and some software is released, TBS please release the BOM and all hardware design files).
 
@@ -30,7 +30,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 
 ### Noteworthy things that work
 ---
-- 2GiB of memory
+- 2GiB of DRAM
 - Booting completely from network in u-boot
 - Full Duplex 10/100/1000 Ethernet
 - 4 Cores of the CPU
@@ -42,7 +42,10 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - The fan
 - The mini-pci port
 - eMMC access in Linux
+- SD card access in Linux
 - Volume buttons
+- Any sort of video output
+- Any sort of GPU acceleration
 - Any sort of audio output
   - HDMI audio out
   - SPDIF audio out
