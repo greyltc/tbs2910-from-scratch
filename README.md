@@ -1,4 +1,4 @@
-tbs2910-patches
+tbs2910-from-scratch
 ===============
 
 Everything you need to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer:  
