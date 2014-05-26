@@ -5,7 +5,11 @@ Everything you need to get Debian Sid, and a bleeding edge kernel and u-boot run
 1. [Wiki containing instructions](https://github.com/l3iggs/tbs2910-from-scratch/wiki)  
 2. u-boot patches  
 3. Kernel config and code patches  
+4. Debian bootstrap script
 
+I'm working on this project in my spare time because I like the product. I like it because it's relatively inexpensive, low power, decent hardware that seems to have some non-zero community support and it's semi-open source (the schematic and some software is released, TBS please release the BOM and all hardware design files).
+
+Every once in a great while I will [post binary release packages](https://github.com/l3iggs/tbs2910-from-scratch/releases) containing u-boot.imx, zImage and imx6q-sabresd.dtb  
 ### Files here
 ---
 - **u-boot.patch**
@@ -17,7 +21,38 @@ Everything you need to get Debian Sid, and a bleeding edge kernel and u-boot run
 - **linuxConfig.patch**
  - This patch applies to arch/arm/configs/imx_v6_v7_defconfig to enable some features of the TBS2910
  - tested on kernel tag v3.14.4 
+- **fsBootstrap.sh**
+ - This shell script completes the Debian file system bootstraping and makes the device usable.
 
 ### Usage
 ---
 Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
+
+### Noteworthy things that work
+---
+- 2GiB of memory
+- Booting completely from network in u-boot
+- Full Duplex 10/100/1000 Ethernet
+- 4 Cores of the CPU
+ - Operating frequency untested
+
+### Noteworthy things that probably/definately don't work
+---
+- Built in WiFi
+- The fan
+- The mini-pci port
+- eMMC access in Linux
+- Volume buttons
+- Any sort of audio output
+  - HDMI audio out
+  - SPDIF audio out
+  - Analog audio out
+
+### Untested things
+---
+- GPIO
+- IRDA port
+- On board temperature sensor(s)
+- CPU Frequency scaling/power saving modes
+- USB in linux
+  - USB on-the-go
