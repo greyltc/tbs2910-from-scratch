@@ -27,7 +27,7 @@ index bb6c60b..4737c9d 100644
  DATA 4 0x021b001c 0x04088032
  DATA 4 0x021b001c 0x0408803A
 diff --git a/boards.cfg b/boards.cfg
-index d31bdba..5107e97 100644
+index 221b7f8..8781150 100644
 --- a/boards.cfg
 +++ b/boards.cfg
 @@ -326,6 +326,7 @@ Active  arm         armv7          mx6         freescale       mx6qarm2
@@ -39,7 +39,7 @@ index d31bdba..5107e97 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..e099110 100644
+index e59a3b4..a8fbcf1 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -63,7 +63,7 @@
@@ -51,16 +51,61 @@ index e59a3b4..e099110 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
-@@ -126,6 +126,7 @@
+@@ -99,20 +99,19 @@
+ 
+ #ifdef CONFIG_SUPPORT_EMMC_BOOT
+ #define EMMC_ENV \
+-	"emmcdev=2\0" \
+-	"update_emmc_firmware=" \
++	"mmc_uboot_dev=2\0" \
++	"mmc_uboot_part=1\0" \
++	"update_uboot=" \
+ 		"if test ${ip_dyn} = yes; then " \
+ 			"setenv get_cmd dhcp; " \
+ 		"else " \
+ 			"setenv get_cmd tftp; " \
+ 		"fi; " \
+-		"if ${get_cmd} ${update_sd_firmware_filename}; then " \
+-			"if mmc dev ${emmcdev} && " \
+-				"mmc open ${emmcdev} 1; then "	\
++		"if ${get_cmd} ${update_uboot_filename}; then " \
++			"if mmc dev ${mmc_uboot_dev} ${mmc_uboot_part}; then " \
+ 				"setexpr fw_sz ${filesize} / 0x200; " \
+ 				"setexpr fw_sz ${fw_sz} + 1; "	\
+ 				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
+-				"mmc close ${emmcdev} 1; " \
+ 			"fi; "	\
+ 		"fi\0"
+ #else
+@@ -125,39 +124,26 @@
+ 	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
  	"fdt_addr=0x18000000\0" \
  	"boot_fdt=try\0" \
++	"update_uboot_filename=u-boot.imx\0" \
  	"ip_dyn=yes\0" \
++	"try_mmc_boot=true\0" \
 +	"opt_kernel_args=loglevel=7\0" \
  	"console=" CONFIG_CONSOLE_DEV "\0" \
  	"fdt_high=0xffffffff\0"	  \
  	"initrd_high=0xffffffff\0" \
-@@ -147,17 +148,14 @@
- 		"fi\0" \
+-	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
+-	"mmcpart=1\0" \
++	"mmc_os_boot_dev=2\0" \
++	"mmc_os_boot_part=0\0" \
+ 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
+-	"update_sd_firmware=" \
+-		"if test ${ip_dyn} = yes; then " \
+-			"setenv get_cmd dhcp; " \
+-		"else " \
+-			"setenv get_cmd tftp; " \
+-		"fi; " \
+-		"if mmc dev ${mmcdev}; then "	\
+-			"if ${get_cmd} ${update_sd_firmware_filename}; then " \
+-				"setexpr fw_sz ${filesize} / 0x200; " \
+-				"setexpr fw_sz ${fw_sz} + 1; "	\
+-				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
+-			"fi; "	\
+-		"fi\0" \
  	EMMC_ENV	  \
  	"mmcargs=setenv bootargs console=${console},${baudrate} " \
 +		"${opt_kernel_args} " \
@@ -75,11 +120,11 @@ index e59a3b4..e099110 100644
  		"run mmcargs; " \
  		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 -			"if run loadfdt; then " \
-+			"if fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}; then " \
++			"if fatload mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${fdt_addr} ${fdt_file}; then " \
  				"bootz ${loadaddr} - ${fdt_addr}; " \
  			"else " \
  				"if test ${boot_fdt} = try; then " \
-@@ -169,17 +167,21 @@
+@@ -169,17 +155,21 @@
  		"else " \
  			"bootz; " \
  		"fi;\0" \
@@ -105,20 +150,24 @@ index e59a3b4..e099110 100644
  		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
  			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
  				"bootz ${loadaddr} - ${fdt_addr}; " \
-@@ -197,10 +199,10 @@
+@@ -195,12 +185,12 @@
+ 		"fi;\0"
+ 
  #define CONFIG_BOOTCOMMAND \
- 	"mmc dev ${mmcdev};" \
- 	"if mmc rescan; then " \
+-	"mmc dev ${mmcdev};" \
+-	"if mmc rescan; then " \
 -		"if run loadbootscript; then " \
-+		"if fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script}; then " \
++	"mmc dev ${mmc_os_boot_dev} 0;" \
++	"if mmc rescan && ${try_mmc_boot}; then " \
++		"if fatload mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${script}; then " \
  		"run bootscript; " \
  		"else " \
 -			"if run loadimage; then " \
-+			"if fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}; then " \
++			"if fatload mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${image}; then " \
  				"run mmcboot; " \
  			"else run netboot; " \
  			"fi; " \
-@@ -214,7 +216,7 @@
+@@ -214,7 +204,7 @@
  #define CONFIG_SYS_HUSH_PARSER
  #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
  #define CONFIG_AUTO_COMPLETE
