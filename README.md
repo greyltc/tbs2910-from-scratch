@@ -9,7 +9,7 @@ Everything you need under one roof to get Debian Sid, and a bleeding edge kernel
 
 I'm posting this "weekend project" because I like the product. I like it because it's relatively inexpensive, low power, decent hardware that seems to have some non-zero community support and it's semi-open source (the schematic and some software is released. TBS, please release the BOM and all hardware design files).
 
-Every once in a great while I will [post binary release packages](https://github.com/l3iggs/tbs2910-from-scratch/releases) containing u-boot.imx, zImage and imx6q-sabresd.dtb  
+Every once in a great while I might [post binary release packages](https://github.com/l3iggs/tbs2910-from-scratch/releases) containing u-boot.imx, zImage and imx6q-sabresd.dtb  
 ### Files in this project
 ---
 - **u-boot.patch**
