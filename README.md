@@ -4,7 +4,7 @@ tbs2910-from-scratch
 Everything you need under one roof to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer:  
 1. [Wiki containing instructions](https://github.com/l3iggs/tbs2910-from-scratch/wiki)  
 2. [u-boot patch](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/u-boot.patch)   
-3. [Kernel config](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/kernelConfig) and [code patches](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/linux.patch)  
+3. [Kernel config](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/.config) and [code patches](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/linux.patch)  
 4. [Debian bootstrap script](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/fsBootstrap.sh)
 
 I'm posting this "weekend project" because I like the product. I like it because it's relatively inexpensive, low power, decent hardware that seems to have some non-zero community support (especially for Freescale's saber* dev boards which this is similar to) and it's semi-open source (the schematic and some software is released. TBS, please release the BOM and all hardware design files). Also, I hate using software that is months/years out of date.
