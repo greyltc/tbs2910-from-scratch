@@ -40,10 +40,10 @@ index 221b7f8..4214665 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/tbs2910.h b/include/configs/tbs2910.h
 new file mode 100644
-index 0000000..90b494a
+index 0000000..e6bb010
 --- /dev/null
 +++ b/include/configs/tbs2910.h
-@@ -0,0 +1,307 @@
+@@ -0,0 +1,306 @@
 +/*
 + * Copyright (C) 2012 Freescale Semiconductor, Inc.
 + *
@@ -61,7 +61,7 @@ index 0000000..90b494a
 +#define CONFIG_MACH_TYPE	3980
 +#define CONFIG_MXC_UART_BASE	UART1_BASE
 +#define CONFIG_CONSOLE_DEV		"ttymxc0"
-+#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
++#define CONFIG_MMCROOT			"/dev/mmcblk0p2"
 +#if defined(CONFIG_MX6Q)
 +#define CONFIG_DEFAULT_FDT_FILE	"imx6q-sabresd.dtb"
 +#elif defined(CONFIG_MX6DL)
@@ -185,7 +185,7 @@ index 0000000..90b494a
 +
 +#define CONFIG_EXTRA_ENV_SETTINGS \
 +	"script=boot.scr\0" \
-+	"image=zImage\0" \
++	"bootfile=zImage\0" \
 +	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
 +	"fdt_addr=0x18000000\0" \
 +	"boot_fdt=try\0" \
@@ -222,7 +222,6 @@ index 0000000..90b494a
 +		"else " \
 +			"bootz; " \
 +		"fi;\0" \
-+        "rootpath=/var/nfsroot\0" \
 +        "nfsopts=nolock,v3,tcp\0" \
 +        "netargs=setenv bootargs console=${console},${baudrate} " \
 +                "${opt_kernel_args} " \
@@ -235,7 +234,7 @@ index 0000000..90b494a
 +		"else " \
 +			"setenv get_cmd tftp; " \
 +		"fi; " \
-+		"${get_cmd} ${image}; " \
++		"${get_cmd} ; " \
 +		"run netargs; " \
 +		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 +			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
@@ -257,7 +256,7 @@ index 0000000..90b494a
 +		"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${script}; then " \
 +		"run bootscript; " \
 +		"else " \
-+			"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${image}; then " \
++			"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${bootfile}; then " \
 +				"run mmcboot; " \
 +			"else run netboot; " \
 +			"fi; " \
