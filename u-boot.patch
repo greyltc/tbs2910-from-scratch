@@ -40,10 +40,10 @@ index 221b7f8..4214665 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/tbs2910.h b/include/configs/tbs2910.h
 new file mode 100644
-index 0000000..e6bb010
+index 0000000..2e88f10
 --- /dev/null
 +++ b/include/configs/tbs2910.h
-@@ -0,0 +1,306 @@
+@@ -0,0 +1,307 @@
 +/*
 + * Copyright (C) 2012 Freescale Semiconductor, Inc.
 + *
@@ -188,6 +188,7 @@ index 0000000..e6bb010
 +	"bootfile=zImage\0" \
 +	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
 +	"fdt_addr=0x18000000\0" \
++	"rootfstype=f2fs\0" \
 +	"boot_fdt=try\0" \
 +	"update_uboot_filename=u-boot.imx\0" \
 +	"ip_dyn=yes\0" \
@@ -200,7 +201,7 @@ index 0000000..e6bb010
 +	"mmc_os_boot_part=1\0" \
 +	"mmc_os_boot_epart=0\0" \
 +	"boot_fs=ext4\0" \
-+	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
++	"mmcroot=" CONFIG_MMCROOT " rootwait rw rootfstype=${rootfstype}\0" \
 +	EMMC_ENV	  \
 +	"mmcargs=setenv bootargs console=${console},${baudrate} " \
 +		"${opt_kernel_args} " \
