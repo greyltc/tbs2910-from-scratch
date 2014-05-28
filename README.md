@@ -32,9 +32,11 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - 4 CPUs at 996 MHz each
  - With ondemand frequency scaling
 - Booting to Linux from the SD Card
+ - Kernel and rootfs on SD card
+ - F2FS root partition
 - Booting to Linux from the network
  - with TFTP for kernel image
- - with NFS for root file system
+ - with NFS for rootfs system
 - SD card access in Linux
 - eMMC access in Linux
 - GPIO
