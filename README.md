@@ -16,7 +16,7 @@ Every once in a great while I might [post binary release packages](https://githu
  - apply this patch to the latest vanilla version of the u-boot source tree to get a u-boot binary supporting 2GiB SDRAM and networking
 - **linux.patch**
  - apply this patch to the latest stable kernel source tree to get a functional linux kernel
-- **kernelConfig**
+- **.config**
  - Use this configuration file to build the kernel
 - **fsBootstrap.sh**
  - This shell script completes the Debian file system bootstraping and makes the device usable.
