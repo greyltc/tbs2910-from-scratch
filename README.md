@@ -31,16 +31,19 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - Booting completely from network in u-boot
 - Full Duplex 10/100/1000 Ethernet
 - 4 Cores of the CPU
- - Operating frequency untested
+ - With ondemand frequency scaling
+- The fan
+- SD card access in Linux
+- GPIO
+- USB
 
 ### Noteworthy things that probably/definately don't currently work
 ---
 - Built in WiFi
-- The fan
 - The Mini PCI Express slot
 - eMMC access in Linux
-- SD card access in Linux
 - Volume buttons
+- On board temperature sensor(s)
 - Any sort of video output
 - Any sort of GPU acceleration
 - Any sort of audio output
@@ -50,9 +53,5 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 
 ### Untested things that are also probably broken 
 ---
-- GPIO
 - IRDA port
-- On board temperature sensor(s)
-- CPU Frequency scaling/power saving modes
-- USB in linux
-  - USB on-the-go
+- USB on-the-go
