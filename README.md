@@ -36,8 +36,8 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
   - [SD Card image released](https://github.com/l3iggs/tbs2910-from-scratch/releases/tag/v0.3)
  - F2FS root partition
 - Booting to Linux from the network
- - with TFTP for kernel image
- - with NFS for rootfs system
+ - kernel image loaded via TFTP
+ - rootfs accessed via NFS
 - eMMC access in Linux
 - GPIO
  - digital (on/off) fan control
