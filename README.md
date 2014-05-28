@@ -27,23 +27,29 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 
 ### Noteworthy things that work
 ---
-- 2GiB of DRAM
-- Booting completely from network in u-boot
+- 2015 MB of RAM
 - Full Duplex 10/100/1000 Ethernet
-- 4 Cores of the CPU
+- 4 CPUs at 996 MHz each
  - With ondemand frequency scaling
-- The fan
+- Booting to Linux from the SD Card
+- Booting to Linux from the network
 - SD card access in Linux
+- eMMC access in Linux
 - GPIO
-- USB
+ - digital (on/off) fan control
+- Scanning for network names via built in WiFi
 
 ### Noteworthy things that probably/definately don't currently work
 ---
-- Built in WiFi
+- Connecting to a WiFi network
+- Booting to linux from the eMMC
 - The Mini PCI Express slot
-- eMMC access in Linux
-- Volume buttons
-- On board temperature sensor(s)
+- GPIO
+ - Blue LED control
+ - GPIO Volume buttons
+ - GPIO Power button
+- On board thermal sensor(s)
+ - Temperature controlled fan
 - Any sort of video output
 - Any sort of GPU acceleration
 - Any sort of audio output
