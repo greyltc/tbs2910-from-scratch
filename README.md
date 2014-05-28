@@ -33,6 +33,8 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
  - With ondemand frequency scaling
 - Booting to Linux from the SD Card
 - Booting to Linux from the network
+ - with TFTP for kernel image
+ - with NFS for root file system
 - SD card access in Linux
 - eMMC access in Linux
 - GPIO
