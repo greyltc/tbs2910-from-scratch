@@ -33,11 +33,11 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
  - With ondemand frequency scaling
 - Booting to Linux from the SD Card
  - Kernel and rootfs on SD card
+  - [SD Card image released](https://github.com/l3iggs/tbs2910-from-scratch/releases/tag/v0.3)
  - F2FS root partition
 - Booting to Linux from the network
  - with TFTP for kernel image
  - with NFS for rootfs system
-- SD card access in Linux
 - eMMC access in Linux
 - GPIO
  - digital (on/off) fan control
