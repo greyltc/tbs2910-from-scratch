@@ -27,327 +27,201 @@ index bb6c60b..4737c9d 100644
  DATA 4 0x021b001c 0x04088032
  DATA 4 0x021b001c 0x0408803A
 diff --git a/boards.cfg b/boards.cfg
-index 221b7f8..4214665 100644
+index 5cf0583..64cb78f 100644
 --- a/boards.cfg
 +++ b/boards.cfg
-@@ -326,6 +326,7 @@ Active  arm         armv7          mx6         freescale       mx6qarm2
- Active  arm         armv7          mx6         freescale       mx6qsabreauto       mx6qsabreauto                         mx6qsabreauto:IMX_CONFIG=board/freescale/mx6qsabreauto/imximage.cfg,MX6Q                                                          Fabio Estevam <fabio.estevam@freescale.com>
+@@ -327,6 +327,7 @@ Active  arm         armv7          mx6         freescale       mx6qsabreauto
+ Active  arm         armv7          mx6         freescale       mx6qsabreauto       mx6dlsabreauto                        mx6qsabreauto:IMX_CONFIG=board/freescale/mx6qsabreauto/mx6dl.cfg,MX6DL            Fabio Estevam <fabio.estevam@freescale.com>
  Active  arm         armv7          mx6         freescale       mx6sabresd          mx6dlsabresd                          mx6sabresd:IMX_CONFIG=board/boundary/nitrogen6x/nitrogen6dl.cfg,MX6DL                                                             Fabio Estevam <fabio.estevam@freescale.com>
  Active  arm         armv7          mx6         freescale       mx6sabresd          mx6qsabresd                           mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q                                                           Fabio Estevam <fabio.estevam@freescale.com>
-+Active  arm         armv7          mx6         freescale       mx6sabresd          tbs2910                               tbs2910:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q,DDR_MB=2048
++Active  arm         armv7          mx6         freescale       mx6sabresd          tbs2910                               mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q,DDR_MB=2048
  Active  arm         armv7          mx6         freescale       mx6slevk            mx6slevk                              mx6slevk:IMX_CONFIG=board/freescale/mx6slevk/imximage.cfg,MX6SL                                                                   Fabio Estevam <fabio.estevam@freescale.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
-diff --git a/include/configs/tbs2910.h b/include/configs/tbs2910.h
-new file mode 100644
-index 0000000..2e88f10
---- /dev/null
-+++ b/include/configs/tbs2910.h
-@@ -0,0 +1,307 @@
-+/*
-+ * Copyright (C) 2012 Freescale Semiconductor, Inc.
-+ *
-+ * Configuration settings for the Freescale i.MX6Q TBS2910 board.
-+ *
-+ * SPDX-License-Identifier:	GPL-2.0+
-+ */
-+
-+#ifndef __TBS2910_CONFIG_H
-+#define __TBS2910_CONFIG_H
-+
-+#include <asm/arch/imx-regs.h>
-+#include <asm/imx-common/gpio.h>
-+
-+#define CONFIG_MACH_TYPE	3980
-+#define CONFIG_MXC_UART_BASE	UART1_BASE
-+#define CONFIG_CONSOLE_DEV		"ttymxc0"
-+#define CONFIG_MMCROOT			"/dev/mmcblk0p2"
-+#if defined(CONFIG_MX6Q)
-+#define CONFIG_DEFAULT_FDT_FILE	"imx6q-sabresd.dtb"
-+#elif defined(CONFIG_MX6DL)
-+#define CONFIG_DEFAULT_FDT_FILE	"imx6dl-sabresd.dtb"
-+#endif
-+#define PHYS_SDRAM_SIZE		(2u * 1024 * 1024 * 1024)
-+
-+#define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
-+
-+#define CONFIG_MX6
-+
-+#include "mx6_common.h"
-+#include <linux/sizes.h>
-+
-+#define CONFIG_DISPLAY_CPUINFO
-+#define CONFIG_DISPLAY_BOARDINFO
-+
-+#include <asm/arch/imx-regs.h>
-+#include <asm/imx-common/gpio.h>
-+
-+#define CONFIG_CMDLINE_TAG
-+#define CONFIG_SETUP_MEMORY_TAGS
-+#define CONFIG_INITRD_TAG
-+#define CONFIG_REVISION_TAG
-+
-+#define CONFIG_SYS_GENERIC_BOARD
-+
-+/* Size of malloc() pool */
-+#define CONFIG_SYS_MALLOC_LEN		(10 * SZ_1M)
-+
-+#define CONFIG_BOARD_EARLY_INIT_F
-+#define CONFIG_BOARD_LATE_INIT
-+#define CONFIG_MXC_GPIO
-+
-+#define CONFIG_MXC_UART
-+
-+#define CONFIG_CMD_FUSE
-+#ifdef CONFIG_CMD_FUSE
-+#define CONFIG_MXC_OCOTP
-+#endif
-+
-+/* MMC Configs */
-+#define CONFIG_FSL_ESDHC
-+#define CONFIG_FSL_USDHC
-+#define CONFIG_SYS_FSL_ESDHC_ADDR      0
-+
-+#define CONFIG_MMC
-+#define CONFIG_CMD_MMC
-+#define CONFIG_GENERIC_MMC
-+#define CONFIG_BOUNCE_BUFFER
-+#define CONFIG_CMD_EXT2
+diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
+index e59a3b4..b94789a 100644
+--- a/include/configs/mx6sabre_common.h
++++ b/include/configs/mx6sabre_common.h
+@@ -51,6 +51,8 @@
+ #define CONFIG_GENERIC_MMC
+ #define CONFIG_BOUNCE_BUFFER
+ #define CONFIG_CMD_EXT2
 +#define CONFIG_CMD_EXT4
-+#define CONFIG_CMD_FAT
 +#define CONFIG_EFI_PARTITION
-+#define CONFIG_DOS_PARTITION
-+
-+#define CONFIG_CMD_PING
-+#define CONFIG_CMD_DHCP
-+#define CONFIG_CMD_MII
-+#define CONFIG_CMD_NET
-+#define CONFIG_FEC_MXC
-+#define CONFIG_MII
-+#define IMX_FEC_BASE			ENET_BASE_ADDR
-+#define CONFIG_FEC_XCV_TYPE		RGMII
-+#define CONFIG_ETHPRIME			"FEC"
+ #define CONFIG_CMD_FAT
+ #define CONFIG_DOS_PARTITION
+ 
+@@ -63,7 +65,7 @@
+ #define IMX_FEC_BASE			ENET_BASE_ADDR
+ #define CONFIG_FEC_XCV_TYPE		RGMII
+ #define CONFIG_ETHPRIME			"FEC"
+-#define CONFIG_FEC_MXC_PHYADDR		1
 +#define CONFIG_FEC_MXC_PHYADDR		4
-+
-+#define CONFIG_PHYLIB
-+#define CONFIG_PHY_ATHEROS
-+
-+#define CONFIG_CMD_SF
-+#ifdef CONFIG_CMD_SF
-+#define CONFIG_SPI_FLASH
-+#define CONFIG_SPI_FLASH_STMICRO
-+#define CONFIG_MXC_SPI
-+#define CONFIG_SF_DEFAULT_BUS		0
-+#define CONFIG_SF_DEFAULT_CS		(0 | (IMX_GPIO_NR(4, 9) << 8))
-+#define CONFIG_SF_DEFAULT_SPEED		20000000
-+#define CONFIG_SF_DEFAULT_MODE		SPI_MODE_0
-+#endif
-+
-+/* allow to overwrite serial and ethaddr */
-+#define CONFIG_ENV_OVERWRITE
-+#define CONFIG_CONS_INDEX              1
-+#define CONFIG_BAUDRATE                        115200
-+
-+/* Command definition */
-+#include <config_cmd_default.h>
-+
-+#define CONFIG_CMD_BMODE
-+#define CONFIG_CMD_BOOTZ
-+#define CONFIG_CMD_SETEXPR
-+#undef CONFIG_CMD_IMLS
-+
-+#define CONFIG_BOOTDELAY               1
-+
-+#define CONFIG_LOADADDR                        0x12000000
-+#define CONFIG_SYS_TEXT_BASE           0x17800000
-+
-+#ifdef CONFIG_SUPPORT_EMMC_BOOT
-+#define EMMC_ENV \
+ 
+ #define CONFIG_PHYLIB
+ #define CONFIG_PHY_ATHEROS
+@@ -99,20 +101,20 @@
+ 
+ #ifdef CONFIG_SUPPORT_EMMC_BOOT
+ #define EMMC_ENV \
+-	"emmcdev=2\0" \
+-	"update_emmc_firmware=" \
 +	"mmc_uboot_dev=2\0" \
 +	"mmc_uboot_part=1\0" \
 +	"update_uboot=" \
-+		"if test ${ip_dyn} = yes; then " \
-+			"setenv get_cmd dhcp; " \
-+		"else " \
-+			"setenv get_cmd tftp; " \
-+		"fi; " \
+ 		"if test ${ip_dyn} = yes; then " \
+ 			"setenv get_cmd dhcp; " \
+ 		"else " \
+ 			"setenv get_cmd tftp; " \
+ 		"fi; " \
+-		"if ${get_cmd} ${update_sd_firmware_filename}; then " \
+-			"if mmc dev ${emmcdev} && " \
+-				"mmc open ${emmcdev} 1; then "	\
 +		"if ${get_cmd} ${update_uboot_filename}; then " \
 +			"if mmc dev ${mmc_uboot_dev} ${mmc_uboot_part}; then " \
-+				"setexpr fw_sz ${filesize} / 0x200; " \
-+				"setexpr fw_sz ${fw_sz} + 1; "	\
-+				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
+ 				"setexpr fw_sz ${filesize} / 0x200; " \
+ 				"setexpr fw_sz ${fw_sz} + 1; "	\
+ 				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
+-				"mmc close ${emmcdev} 1; " \
 +				"mmc partconf ${mmc_uboot_dev} 0 ${mmc_uboot_part} 0; " \
-+			"fi; "	\
-+		"fi\0"
-+#else
-+#define EMMC_ENV ""
-+#endif
-+
-+#define CONFIG_EXTRA_ENV_SETTINGS \
-+	"script=boot.scr\0" \
+ 			"fi; "	\
+ 		"fi\0"
+ #else
+@@ -121,43 +123,33 @@
+ 
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"script=boot.scr\0" \
+-	"image=zImage\0" \
 +	"bootfile=zImage\0" \
-+	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
-+	"fdt_addr=0x18000000\0" \
+ 	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
+ 	"fdt_addr=0x18000000\0" \
 +	"rootfstype=f2fs\0" \
-+	"boot_fdt=try\0" \
+ 	"boot_fdt=try\0" \
 +	"update_uboot_filename=u-boot.imx\0" \
-+	"ip_dyn=yes\0" \
+ 	"ip_dyn=yes\0" \
 +	"try_mmc_boot=true\0" \
 +	"opt_kernel_args=loglevel=7\0" \
-+	"console=" CONFIG_CONSOLE_DEV "\0" \
-+	"fdt_high=0xffffffff\0"	  \
-+	"initrd_high=0xffffffff\0" \
+ 	"console=" CONFIG_CONSOLE_DEV "\0" \
+ 	"fdt_high=0xffffffff\0"	  \
+ 	"initrd_high=0xffffffff\0" \
+-	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
+-	"mmcpart=1\0" \
+-	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
+-	"update_sd_firmware=" \
+-		"if test ${ip_dyn} = yes; then " \
+-			"setenv get_cmd dhcp; " \
+-		"else " \
+-			"setenv get_cmd tftp; " \
+-		"fi; " \
+-		"if mmc dev ${mmcdev}; then "	\
+-			"if ${get_cmd} ${update_sd_firmware_filename}; then " \
+-				"setexpr fw_sz ${filesize} / 0x200; " \
+-				"setexpr fw_sz ${fw_sz} + 1; "	\
+-				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
+-			"fi; "	\
+-		"fi\0" \
 +	"mmc_os_boot_dev=1\0" \
 +	"mmc_os_boot_part=1\0" \
 +	"mmc_os_boot_epart=0\0" \
 +	"boot_fs=ext4\0" \
 +	"mmcroot=" CONFIG_MMCROOT " rootwait rw rootfstype=${rootfstype}\0" \
-+	EMMC_ENV	  \
-+	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+ 	EMMC_ENV	  \
+ 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
 +		"${opt_kernel_args} " \
-+		"root=${mmcroot}\0" \
-+	"bootscript=echo Running bootscript from mmc ...; " \
-+		"source\0" \
-+	"mmcboot=echo Booting from mmc ...; " \
-+		"run mmcargs; " \
-+		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+ 		"root=${mmcroot}\0" \
+-	"loadbootscript=" \
+-		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
+ 	"bootscript=echo Running bootscript from mmc ...; " \
+ 		"source\0" \
+-	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+-	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+ 	"mmcboot=echo Booting from mmc ...; " \
+ 		"run mmcargs; " \
+ 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+-			"if run loadfdt; then " \
 +			"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${fdt_addr} ${fdt_file}; then " \
-+				"bootz ${loadaddr} - ${fdt_addr}; " \
-+			"else " \
-+				"if test ${boot_fdt} = try; then " \
-+					"bootz; " \
-+				"else " \
-+					"echo WARN: Cannot load the DT; " \
-+				"fi; " \
-+			"fi; " \
-+		"else " \
-+			"bootz; " \
-+		"fi;\0" \
+ 				"bootz ${loadaddr} - ${fdt_addr}; " \
+ 			"else " \
+ 				"if test ${boot_fdt} = try; then " \
+@@ -169,17 +161,20 @@
+ 		"else " \
+ 			"bootz; " \
+ 		"fi;\0" \
+-	"netargs=setenv bootargs console=${console},${baudrate} " \
+-		"root=/dev/nfs " \
+-		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
 +        "nfsopts=nolock,v3,tcp\0" \
 +        "netargs=setenv bootargs console=${console},${baudrate} " \
 +                "${opt_kernel_args} " \
 +                "root=/dev/nfs " \
 +                "nfsroot=${rootpath},${nfsopts} rw " \
 +                "ip=dhcp\0" \
-+	"netboot=echo Booting from net ...; " \
-+		"if test ${ip_dyn} = yes; then " \
-+			"setenv get_cmd dhcp; " \
-+		"else " \
-+			"setenv get_cmd tftp; " \
-+		"fi; " \
+ 	"netboot=echo Booting from net ...; " \
+-		"run netargs; " \
+ 		"if test ${ip_dyn} = yes; then " \
+ 			"setenv get_cmd dhcp; " \
+ 		"else " \
+ 			"setenv get_cmd tftp; " \
+ 		"fi; " \
+-		"${get_cmd} ${image}; " \
 +		"${get_cmd} ; " \
 +		"run netargs; " \
-+		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
-+			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
-+				"bootz ${loadaddr} - ${fdt_addr}; " \
-+			"else " \
-+				"if test ${boot_fdt} = try; then " \
-+					"bootz; " \
-+				"else " \
-+					"echo WARN: Cannot load the DT; " \
-+				"fi; " \
-+			"fi; " \
-+		"else " \
-+			"bootz; " \
-+		"fi;\0"
-+
-+#define CONFIG_BOOTCOMMAND \
+ 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+ 			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
+ 				"bootz ${loadaddr} - ${fdt_addr}; " \
+@@ -195,12 +190,12 @@
+ 		"fi;\0"
+ 
+ #define CONFIG_BOOTCOMMAND \
+-	"mmc dev ${mmcdev};" \
+-	"if mmc rescan; then " \
+-		"if run loadbootscript; then " \
 +	"mmc dev ${mmc_os_boot_dev} ${mmc_os_boot_epart};" \
 +	"if mmc rescan && ${try_mmc_boot}; then " \
 +		"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${script}; then " \
-+		"run bootscript; " \
-+		"else " \
+ 		"run bootscript; " \
+ 		"else " \
+-			"if run loadimage; then " \
 +			"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${bootfile}; then " \
-+				"run mmcboot; " \
-+			"else run netboot; " \
-+			"fi; " \
-+		"fi; " \
-+	"else run netboot; fi"
-+
-+#define CONFIG_ARP_TIMEOUT     200UL
-+
-+/* Miscellaneous configurable options */
-+#define CONFIG_SYS_LONGHELP
-+#define CONFIG_SYS_HUSH_PARSER
-+#define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
-+#define CONFIG_AUTO_COMPLETE
+ 				"run mmcboot; " \
+ 			"else run netboot; " \
+ 			"fi; " \
+@@ -214,7 +209,7 @@
+ #define CONFIG_SYS_HUSH_PARSER
+ #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
+ #define CONFIG_AUTO_COMPLETE
+-#define CONFIG_SYS_CBSIZE              256
 +#define CONFIG_SYS_CBSIZE              512
-+
-+/* Print Buffer Size */
-+#define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
-+#define CONFIG_SYS_MAXARGS             16
-+#define CONFIG_SYS_BARGSIZE CONFIG_SYS_CBSIZE
-+
-+#define CONFIG_SYS_MEMTEST_START       0x10000000
-+#define CONFIG_SYS_MEMTEST_END         0x10010000
-+#define CONFIG_SYS_MEMTEST_SCRATCH     0x10800000
-+
-+#define CONFIG_SYS_LOAD_ADDR           CONFIG_LOADADDR
-+
-+#define CONFIG_CMDLINE_EDITING
-+#define CONFIG_STACKSIZE               (128 * 1024)
-+
-+/* Physical Memory Map */
-+#define CONFIG_NR_DRAM_BANKS           1
-+#define PHYS_SDRAM                     MMDC0_ARB_BASE_ADDR
-+
-+#define CONFIG_SYS_SDRAM_BASE          PHYS_SDRAM
-+#define CONFIG_SYS_INIT_RAM_ADDR       IRAM_BASE_ADDR
-+#define CONFIG_SYS_INIT_RAM_SIZE       IRAM_SIZE
-+
-+#define CONFIG_SYS_INIT_SP_OFFSET \
-+	(CONFIG_SYS_INIT_RAM_SIZE - GENERATED_GBL_DATA_SIZE)
-+#define CONFIG_SYS_INIT_SP_ADDR \
-+	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
-+
-+/* FLASH and environment organization */
-+#define CONFIG_SYS_NO_FLASH
-+
-+#define CONFIG_ENV_SIZE			(8 * 1024)
-+
-+#define CONFIG_ENV_IS_IN_MMC
-+
-+#if defined(CONFIG_ENV_IS_IN_MMC)
-+#define CONFIG_ENV_OFFSET		(6 * 64 * 1024)
-+#endif
-+
-+#define CONFIG_OF_LIBFDT
-+
-+#ifndef CONFIG_SYS_DCACHE_OFF
-+#define CONFIG_CMD_CACHE
-+#endif
-+
-+#define CONFIG_SYS_FSL_USDHC_NUM	3
-+#if defined(CONFIG_ENV_IS_IN_MMC)
+ 
+ /* Print Buffer Size */
+ #define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
+diff --git a/include/configs/mx6sabresd.h b/include/configs/mx6sabresd.h
+index e666ebb..c3e14b8 100644
+--- a/include/configs/mx6sabresd.h
++++ b/include/configs/mx6sabresd.h
+@@ -15,13 +15,13 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONFIG_CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
++#define CONFIG_MMCROOT			"/dev/mmcblk0p2"
+ #if defined(CONFIG_MX6Q)
+ #define CONFIG_DEFAULT_FDT_FILE	"imx6q-sabresd.dtb"
+ #elif defined(CONFIG_MX6DL)
+ #define CONFIG_DEFAULT_FDT_FILE	"imx6dl-sabresd.dtb"
+ #endif
+-#define PHYS_SDRAM_SIZE		(1u * 1024 * 1024 * 1024)
++#define PHYS_SDRAM_SIZE		(2u * 1024 * 1024 * 1024)
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -29,7 +29,8 @@
+ 
+ #define CONFIG_SYS_FSL_USDHC_NUM	3
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+-#define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC3 */
 +#define CONFIG_SYS_MMC_ENV_DEV		2	/* SDHC3 */
 +#define CONFIG_SYS_MMC_ENV_PART		1
-+#endif
-+
-+/* Framebuffer */
-+#define CONFIG_VIDEO
-+#define CONFIG_VIDEO_IPUV3
-+#define CONFIG_CFB_CONSOLE
-+#define CONFIG_VGA_AS_SINGLE_DEVICE
-+#define CONFIG_SYS_CONSOLE_IS_IN_ENV
-+#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
-+#define CONFIG_VIDEO_BMP_RLE8
-+#define CONFIG_SPLASH_SCREEN
-+#define CONFIG_SPLASH_SCREEN_ALIGN
-+#define CONFIG_BMP_16BPP
-+#define CONFIG_VIDEO_LOGO
-+#define CONFIG_VIDEO_BMP_LOGO
-+#define CONFIG_IPUV3_CLK 260000000
-+#define CONFIG_IMX_HDMI
-+#define CONFIG_IMX_VIDEO_SKIP
-+
-+#define CONFIG_CMD_PCI
-+#ifdef CONFIG_CMD_PCI
-+#define CONFIG_PCI
-+#define CONFIG_PCI_PNP
-+#define CONFIG_PCI_SCAN_SHOW
-+#define CONFIG_PCIE_IMX
-+#define CONFIG_PCIE_IMX_PERST_GPIO	IMX_GPIO_NR(7, 12)
-+#define CONFIG_PCIE_IMX_POWER_GPIO	IMX_GPIO_NR(3, 19)
-+#endif
-+
-+#endif                         /* __TBS2910_CONFIG_H */
+ #endif
+ 
+ /* Framebuffer */
