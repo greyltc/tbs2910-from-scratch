@@ -39,17 +39,17 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
  - kernel image loaded via TFTP
  - rootfs accessed via NFS
 - eMMC access in Linux
+- Booting to linux from the eMMC
 - GPIO
+ - Blue LED control
  - digital (on/off) fan control
 - Scanning for network names via built in WiFi
 
 ### Noteworthy things that probably/definately don't currently work
 ---
 - Connecting to a WiFi network
-- Booting to linux from the eMMC
 - The Mini PCI Express slot
 - GPIO
- - Blue LED control
  - GPIO Volume buttons
  - GPIO Power button
 - On board thermal sensor(s)
