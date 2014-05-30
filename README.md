@@ -52,8 +52,6 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 ---
 - Connecting to a WiFi network
 - The Mini PCI Express slot
-- GPIO
-
 - On board thermal sensor(s)
  - Temperature controlled fan
 - Any sort of GPU acceleration
