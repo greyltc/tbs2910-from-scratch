@@ -39,7 +39,7 @@ index 5cf0583..64cb78f 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..e48905f 100644
+index e59a3b4..9374c57 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -51,6 +51,8 @@
@@ -89,13 +89,14 @@ index e59a3b4..e48905f 100644
  			"fi; "	\
  		"fi\0"
  #else
-@@ -121,43 +125,34 @@
+@@ -121,43 +125,35 @@
  
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	"script=boot.scr\0" \
 -	"image=zImage\0" \
 +	"bootfile=zImage\0" \
  	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
++	"mmcroot=" CONFIG_MMCROOT "\0" \
  	"fdt_addr=0x18000000\0" \
 +	"rootfstype=f2fs\0" \
  	"boot_fdt=try\0" \
@@ -103,7 +104,7 @@ index e59a3b4..e48905f 100644
  	"ip_dyn=yes\0" \
 +	"try_mmc_boot=true\0" \
 +	"set_kernel_console=env set kernel_console console=tty0 console=${console},${baudrate}\0" \
-+	"opt_kernel_args=loglevel=7\0" \
++	"kernel_opt_args=loglevel=7\0" \
  	"console=" CONFIG_CONSOLE_DEV "\0" \
  	"fdt_high=0xffffffff\0"	  \
  	"initrd_high=0xffffffff\0" \
@@ -123,18 +124,20 @@ index e59a3b4..e48905f 100644
 -				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
 -			"fi; "	\
 -		"fi\0" \
+-	EMMC_ENV	  \
+-	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+-		"root=${mmcroot}\0" \
+-	"loadbootscript=" \
+-		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 +	"mmc_os_boot_dev=2\0" \
 +	"mmc_os_boot_part=1\0" \
 +	"mmc_os_boot_epart=0\0" \
 +	"boot_fs=ext4\0" \
-+	"set_mmcroot=set env mmcroot " CONFIG_MMCROOT " rootwait rw rootfstype=${rootfstype}\0" \
- 	EMMC_ENV	  \
--	"mmcargs=setenv bootargs console=${console},${baudrate} " \
++	"set_mmcroot=env set kernel_mmcroot root=${mmcroot} rootwait rw rootfstype=${rootfstype}\0" \
++	EMMC_ENV\
 +	"mmcargs=env run set_mmcroot; env run set_kernel_console; setenv bootargs ${kernel_console} " \
-+		"${opt_kernel_args} " \
- 		"root=${mmcroot}\0" \
--	"loadbootscript=" \
--		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
++		"${kernel_opt_args} " \
++		"${kernel_mmcroot}\0" \
  	"bootscript=echo Running bootscript from mmc ...; " \
  		"source\0" \
 -	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
@@ -147,7 +150,7 @@ index e59a3b4..e48905f 100644
  				"bootz ${loadaddr} - ${fdt_addr}; " \
  			"else " \
  				"if test ${boot_fdt} = try; then " \
-@@ -169,17 +164,20 @@
+@@ -169,17 +165,20 @@
  		"else " \
  			"bootz; " \
  		"fi;\0" \
@@ -156,7 +159,7 @@ index e59a3b4..e48905f 100644
 -		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
 +        "nfsopts=nolock,v3,tcp\0" \
 +        "netargs=env run set_kernel_console; setenv bootargs ${kernel_console} " \
-+                "${opt_kernel_args} " \
++                "${kernel_opt_args} " \
 +                "root=/dev/nfs " \
 +                "nfsroot=${rootpath},${nfsopts} rw " \
 +                "ip=dhcp\0" \
@@ -173,7 +176,7 @@ index e59a3b4..e48905f 100644
  		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
  			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
  				"bootz ${loadaddr} - ${fdt_addr}; " \
-@@ -195,12 +193,12 @@
+@@ -195,12 +194,12 @@
  		"fi;\0"
  
  #define CONFIG_BOOTCOMMAND \
@@ -190,7 +193,7 @@ index e59a3b4..e48905f 100644
  				"run mmcboot; " \
  			"else run netboot; " \
  			"fi; " \
-@@ -214,7 +212,7 @@
+@@ -214,7 +213,7 @@
  #define CONFIG_SYS_HUSH_PARSER
  #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
  #define CONFIG_AUTO_COMPLETE
