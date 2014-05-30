@@ -43,6 +43,8 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - GPIO
  - Blue LED control
  - digital (on/off) fan control
+ - GPIO Volume buttons (presses register)
+ - GPIO Power button (presses register)
 - Scanning for network names via built in WiFi
 - HDMI video output
 
@@ -51,8 +53,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - Connecting to a WiFi network
 - The Mini PCI Express slot
 - GPIO
- - GPIO Volume buttons
- - GPIO Power button
+
 - On board thermal sensor(s)
  - Temperature controlled fan
 - Any sort of GPU acceleration
