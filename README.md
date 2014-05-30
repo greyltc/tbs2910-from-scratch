@@ -17,7 +17,7 @@ Every once in a great while I might [post binary release packages](https://githu
 - **linux.patch**
  - Patch containing changes to the Linux kernel sources
 - **matrix.cfg**
- - This is a kernel configuration fragment that should be applied on top of imx_v6_v7_defconfig
+ - This is a kernel configuration fragment that should be applied on top of the default linux configuration
 - **fsBootstrap.sh**
  - This shell script completes the Debian file system bootstraping and makes the device usable.
 
