@@ -39,7 +39,7 @@ index 5cf0583..64cb78f 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..bfbf3ae 100644
+index e59a3b4..e48905f 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -51,6 +51,8 @@
@@ -60,7 +60,7 @@ index e59a3b4..bfbf3ae 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
-@@ -99,20 +101,21 @@
+@@ -99,20 +101,22 @@
  
  #ifdef CONFIG_SUPPORT_EMMC_BOOT
  #define EMMC_ENV \
@@ -79,16 +79,17 @@ index e59a3b4..bfbf3ae 100644
 -				"mmc open ${emmcdev} 1; then "	\
 +		"if ${get_cmd} ${update_uboot_filename}; then " \
 +			"if mmc dev ${mmc_uboot_dev} ${mmc_uboot_part}; then " \
-+				"mmc erase 0 0x2000; " \
  				"setexpr fw_sz ${filesize} / 0x200; " \
  				"setexpr fw_sz ${fw_sz} + 1; "	\
++				"mmc erase 0x0 0x2000; " \
  				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
 -				"mmc close ${emmcdev} 1; " \
 +				"mmc partconf ${mmc_uboot_dev} 0 ${mmc_uboot_part} 0; " \
++				"mmc dev ${mmc_uboot_dev} ${mmc_os_boot_epart}; " \
  			"fi; "	\
  		"fi\0"
  #else
-@@ -121,43 +124,34 @@
+@@ -121,43 +125,34 @@
  
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	"script=boot.scr\0" \
@@ -101,7 +102,7 @@ index e59a3b4..bfbf3ae 100644
 +	"update_uboot_filename=u-boot.imx\0" \
  	"ip_dyn=yes\0" \
 +	"try_mmc_boot=true\0" \
-+	"kernel_console=console = tty0 console=${console},${baudrate}\0" \
++	"set_kernel_console=env set kernel_console console=tty0 console=${console},${baudrate}\0" \
 +	"opt_kernel_args=loglevel=7\0" \
  	"console=" CONFIG_CONSOLE_DEV "\0" \
  	"fdt_high=0xffffffff\0"	  \
@@ -126,10 +127,10 @@ index e59a3b4..bfbf3ae 100644
 +	"mmc_os_boot_part=1\0" \
 +	"mmc_os_boot_epart=0\0" \
 +	"boot_fs=ext4\0" \
-+	"mmcroot=" CONFIG_MMCROOT " rootwait rw rootfstype=${rootfstype}\0" \
++	"set_mmcroot=set env mmcroot " CONFIG_MMCROOT " rootwait rw rootfstype=${rootfstype}\0" \
  	EMMC_ENV	  \
 -	"mmcargs=setenv bootargs console=${console},${baudrate} " \
-+	"mmcargs=setenv bootargs ${kernel_console} " \
++	"mmcargs=env run set_mmcroot; env run set_kernel_console; setenv bootargs ${kernel_console} " \
 +		"${opt_kernel_args} " \
  		"root=${mmcroot}\0" \
 -	"loadbootscript=" \
@@ -146,7 +147,7 @@ index e59a3b4..bfbf3ae 100644
  				"bootz ${loadaddr} - ${fdt_addr}; " \
  			"else " \
  				"if test ${boot_fdt} = try; then " \
-@@ -169,17 +163,20 @@
+@@ -169,17 +164,20 @@
  		"else " \
  			"bootz; " \
  		"fi;\0" \
@@ -154,7 +155,7 @@ index e59a3b4..bfbf3ae 100644
 -		"root=/dev/nfs " \
 -		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
 +        "nfsopts=nolock,v3,tcp\0" \
-+        "netargs=setenv bootargs ${kernel_console} " \
++        "netargs=env run set_kernel_console; setenv bootargs ${kernel_console} " \
 +                "${opt_kernel_args} " \
 +                "root=/dev/nfs " \
 +                "nfsroot=${rootpath},${nfsopts} rw " \
@@ -172,7 +173,7 @@ index e59a3b4..bfbf3ae 100644
  		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
  			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
  				"bootz ${loadaddr} - ${fdt_addr}; " \
-@@ -195,12 +192,12 @@
+@@ -195,12 +193,12 @@
  		"fi;\0"
  
  #define CONFIG_BOOTCOMMAND \
@@ -189,7 +190,7 @@ index e59a3b4..bfbf3ae 100644
  				"run mmcboot; " \
  			"else run netboot; " \
  			"fi; " \
-@@ -214,7 +211,7 @@
+@@ -214,7 +212,7 @@
  #define CONFIG_SYS_HUSH_PARSER
  #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
  #define CONFIG_AUTO_COMPLETE
