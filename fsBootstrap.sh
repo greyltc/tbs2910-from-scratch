@@ -27,7 +27,7 @@ echo matrix > /etc/hostname
 
 #allows shell login via UART port
 echo 'T0:2345:respawn:/sbin/getty -L ttymxc0 115200 linux' >> /etc/inittab
-sed -i 's/^\([1-6]:.* tty[1-6]\)/#\1/' /etc/inittab
+#sed -i 's/^\([1-6]:.* tty[1-6]\)/#\1/' /etc/inittab
 
 #setup some local specific things
 dpkg-reconfigure locales
