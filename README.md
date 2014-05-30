@@ -44,6 +44,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
  - Blue LED control
  - digital (on/off) fan control
 - Scanning for network names via built in WiFi
+- HDMI video output
 
 ### Noteworthy things that probably/definately don't currently work
 ---
@@ -54,7 +55,6 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
  - GPIO Power button
 - On board thermal sensor(s)
  - Temperature controlled fan
-- Any sort of video output
 - Any sort of GPU acceleration
 - Any sort of audio output
   - HDMI audio out
