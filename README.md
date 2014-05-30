@@ -31,15 +31,14 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - Full Duplex 10/100/1000 Ethernet
 - 4 CPUs at 996 MHz each
  - With ondemand frequency scaling
-- Booting to Linux from the SD Card
- - Kernel and rootfs on SD card
-  - [SD Card image released](https://github.com/l3iggs/tbs2910-from-scratch/releases/tag/v0.3)
- - F2FS root partition
+- Booting to Linux from SD Card
+ - Kernel loaded from ext4 partition ([image released](https://github.com/l3iggs/tbs2910-from-scratch/releases/tag/v0.3))
+ - with F2FS root partition
 - Booting to Linux from the network
  - kernel image loaded via TFTP
  - rootfs accessed via NFS
-- eMMC access in Linux
 - Booting to linux from the eMMC
+ - with F2FS root partition
 - GPIO
  - Blue LED control
  - digital (on/off) fan control
@@ -53,7 +52,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - Connecting to a WiFi network
 - The Mini PCI Express slot
 - On board thermal sensor(s)
- - Temperature controlled fan
+ - Temperature controlled fan speed
 - Any sort of GPU acceleration
 - Any sort of audio output
   - HDMI audio out
