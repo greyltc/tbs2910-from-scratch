@@ -46,6 +46,7 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
  - GPIO Power button (presses register)
 - Scanning for network names via built in WiFi
 - HDMI video output
+ - Text console works fine, 1920x1200 @ 25Hz
 - SATA port
  - Port multiplier functionality working
  - 3 Gbit/s link negotiation observed
