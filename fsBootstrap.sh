@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #debootstrap second stage (extracts and sets up all installed packages)
-/debootstrap/debootstrap --second-stage --verbose
+/debootstrap/debootstrap --no-check-gpg --second-stage --verbose
 
 #networking stuff
 cat  > /etc/network/interfaces.d/eth0 <<END
