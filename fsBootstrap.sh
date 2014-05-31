@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Running bootstrap script"
+echo "Bootstrapping"
 #debootstrap second stage (extracts and sets up all installed packages)
 /debootstrap/debootstrap --second-stage --verbose
 echo "Second stage done"
