@@ -51,4 +51,6 @@ passwd
 rm /sbin/init
 mv /sbin/init.bak /sbin/init
 
+echo "Setup complete! Rebooting..."
+
 reboot -f
