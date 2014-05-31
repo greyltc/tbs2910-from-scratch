@@ -1,7 +1,9 @@
 #!/bin/sh
 
+echo "Running bootstrap script"
 #debootstrap second stage (extracts and sets up all installed packages)
 /debootstrap/debootstrap --no-check-gpg --second-stage --verbose
+echo "Second stage done"
 
 #networking stuff
 cat  > /etc/network/interfaces.d/eth0 <<END
