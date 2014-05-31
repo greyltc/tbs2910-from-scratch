@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#sebootstrap second stage (extracts and sets up all installed packages)
+#debootstrap second stage (extracts and sets up all installed packages)
 /debootstrap/debootstrap --second-stage --verbose
 
 #networking stuff
@@ -33,6 +33,12 @@ echo 'T0:2345:respawn:/sbin/getty -L ttymxc0 115200 linux' >> /etc/inittab
 dpkg-reconfigure locales
 dpkg-reconfigure tzdata
 
+#for boot partition
+cat > /etc/fstab << END
+/dev/disk/by-label/ext4boot /boot               ext4    errors=remount-ro 0       2
+END
+
+
 #for software updates
 cat > /etc/apt/sources.list << END
 deb http://http.debian.net/debian sid main contrib non-free
@@ -41,5 +47,8 @@ END
 
 echo "Choose root password:"
 passwd
+
+rm /sbin/init
+mv /sbin/init.bak /sbin/init
 
 reboot -f
