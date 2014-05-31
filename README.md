@@ -44,7 +44,9 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
  - digital (on/off) fan control
  - GPIO Volume buttons (presses register)
  - GPIO Power button (presses register)
-- Scanning for network names via built in WiFi
+- WiFi
+ - The driver crashes on initial connect with no appairent consiquences
+ - I measured 5.8MB/sec sustained transfer
 - HDMI video output
  - Text console works fine, 1920x1200 @ 25Hz
 - SATA port
@@ -53,7 +55,6 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 
 ### Noteworthy things that probably/definately don't currently work
 ---
-- Connecting to a WiFi network
 - The Mini PCI Express slot
 - On board thermal sensor(s)
  - Temperature controlled fan speed
