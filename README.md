@@ -31,8 +31,8 @@ Read the wiki: https://github.com/l3iggs/tbs2910-from-scratch/wiki
 - Full Duplex 10/100/1000 Ethernet
 - 4 CPUs at 996 MHz each
  - With ondemand frequency scaling
-- Booting to Linux from SD Card
- - Kernel loaded from ext4 partition ([image released](https://github.com/l3iggs/tbs2910-from-scratch/releases/tag/v0.3))
+- Booting to Linux from SD Card ([image released](https://github.com/l3iggs/tbs2910-from-scratch/releases/tag/v0.3))
+ - Kernel loaded from ext4 partition 
  - with F2FS root partition
 - Booting to Linux from the network
  - kernel image loaded via TFTP
