@@ -50,8 +50,6 @@ END
 echo "Choose root password:"
 passwd
 
-rm /etc/rcS.d/S00fsBootstrap.sh
-
 echo "Setup complete! Rebooting..."
 
 reboot -f
