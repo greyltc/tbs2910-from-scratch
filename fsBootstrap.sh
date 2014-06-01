@@ -1,5 +1,7 @@
 #!/bin/sh
 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
 echo "Bootstrapping..."
 #debootstrap second stage (extracts and sets up all installed packages)
 /debootstrap/debootstrap --second-stage --verbose
