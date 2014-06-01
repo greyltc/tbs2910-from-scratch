@@ -1,7 +1,5 @@
 #!/bin/sh
 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
-
 echo "Bootstrapping..."
 #debootstrap second stage (extracts and sets up all installed packages)
 /debootstrap/debootstrap --second-stage --verbose
@@ -51,6 +49,9 @@ END
 
 echo "Choose root password:"
 passwd
+
+rm /sbin/init
+mv /sbin/init.bak /sbin/init
 
 echo "Setup complete! Rebooting..."
 
