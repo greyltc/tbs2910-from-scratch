@@ -39,7 +39,7 @@ index 5cf0583..64cb78f 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..9374c57 100644
+index e59a3b4..e7436e5 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -51,6 +51,8 @@
@@ -60,54 +60,74 @@ index e59a3b4..9374c57 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
-@@ -99,20 +101,22 @@
+@@ -97,124 +99,63 @@
+ #define CONFIG_LOADADDR                        0x12000000
+ #define CONFIG_SYS_TEXT_BASE           0x17800000
  
- #ifdef CONFIG_SUPPORT_EMMC_BOOT
- #define EMMC_ENV \
+-#ifdef CONFIG_SUPPORT_EMMC_BOOT
+-#define EMMC_ENV \
 -	"emmcdev=2\0" \
 -	"update_emmc_firmware=" \
-+	"mmc_uboot_dev=2\0" \
-+	"mmc_uboot_part=1\0" \
-+	"update_uboot=" \
- 		"if test ${ip_dyn} = yes; then " \
- 			"setenv get_cmd dhcp; " \
- 		"else " \
- 			"setenv get_cmd tftp; " \
- 		"fi; " \
+-		"if test ${ip_dyn} = yes; then " \
+-			"setenv get_cmd dhcp; " \
+-		"else " \
+-			"setenv get_cmd tftp; " \
+-		"fi; " \
 -		"if ${get_cmd} ${update_sd_firmware_filename}; then " \
 -			"if mmc dev ${emmcdev} && " \
 -				"mmc open ${emmcdev} 1; then "	\
-+		"if ${get_cmd} ${update_uboot_filename}; then " \
-+			"if mmc dev ${mmc_uboot_dev} ${mmc_uboot_part}; then " \
- 				"setexpr fw_sz ${filesize} / 0x200; " \
- 				"setexpr fw_sz ${fw_sz} + 1; "	\
-+				"mmc erase 0x0 0x2000; " \
- 				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
+-				"setexpr fw_sz ${filesize} / 0x200; " \
+-				"setexpr fw_sz ${fw_sz} + 1; "	\
+-				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
 -				"mmc close ${emmcdev} 1; " \
-+				"mmc partconf ${mmc_uboot_dev} 0 ${mmc_uboot_part} 0; " \
-+				"mmc dev ${mmc_uboot_dev} ${mmc_os_boot_epart}; " \
- 			"fi; "	\
- 		"fi\0"
- #else
-@@ -121,43 +125,35 @@
+-			"fi; "	\
+-		"fi\0"
+-#else
+-#define EMMC_ENV ""
+-#endif
++//Console setup
++#define CONFIG_CONSOLE_MUX
++#define CONFIG_SYS_CONSOLE_IS_IN_ENV
++#define CONFIG_NETCONSOLE
++
++#define CONFIG_PREBOOT \
++        "setenv autoload no; " \
++	"usb start; " \
++	"mmc rescan; " \
++        "if dhcp; then setenv nc ,nc; fi; " \
++        "setenv stdin serial${nc},vga,usbkbd; " \
++        "setenv stdout serial${nc},vga; " \
++        "setenv stderr serial${nc},vga; "
++
++#define ENV_SCAN_SETTINGS \
++        "target=boot.scr\0" \
++        "busses_to_scan=tftp usb mmc\0" \
++        "filesystems_to_scan=ext4 fat\0" \
++        "devices_to_scan=0 1 2 3\0" \
++        "device_regions_to_scan=0 1 2 3\0" \
++        "fs_partitions_to_scan=1 2 3\0"
++
++#define FILE_LOADER \
++	"loader=echo Scanning for ${target}...;" \
++        "for dtype in ${busses_to_scan}; do " \
++                "if test ${dtype} = tftp && test ${nc} = ,nc; then " \
++                        "echo ${dtype}; " \
++                        "if ${dtype} ${target}; then " \
++                                "echo ${target} found!; " \
++                        "fi; " \
++                "fi; " \
++        "done\0"
  
  #define CONFIG_EXTRA_ENV_SETTINGS \
- 	"script=boot.scr\0" \
+-	"script=boot.scr\0" \
 -	"image=zImage\0" \
-+	"bootfile=zImage\0" \
- 	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
-+	"mmcroot=" CONFIG_MMCROOT "\0" \
- 	"fdt_addr=0x18000000\0" \
-+	"rootfstype=f2fs\0" \
- 	"boot_fdt=try\0" \
-+	"update_uboot_filename=u-boot.imx\0" \
- 	"ip_dyn=yes\0" \
-+	"try_mmc_boot=true\0" \
-+	"set_kernel_console=env set kernel_console console=tty0 console=${console},${baudrate}\0" \
-+	"kernel_opt_args=loglevel=7\0" \
- 	"console=" CONFIG_CONSOLE_DEV "\0" \
- 	"fdt_high=0xffffffff\0"	  \
- 	"initrd_high=0xffffffff\0" \
+-	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
+-	"fdt_addr=0x18000000\0" \
+-	"boot_fdt=try\0" \
+-	"ip_dyn=yes\0" \
+-	"console=" CONFIG_CONSOLE_DEV "\0" \
+-	"fdt_high=0xffffffff\0"	  \
+-	"initrd_high=0xffffffff\0" \
 -	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
 -	"mmcpart=1\0" \
 -	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
@@ -129,100 +149,120 @@ index e59a3b4..9374c57 100644
 -		"root=${mmcroot}\0" \
 -	"loadbootscript=" \
 -		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
-+	"mmc_os_boot_dev=2\0" \
-+	"mmc_os_boot_part=1\0" \
-+	"mmc_os_boot_epart=0\0" \
-+	"boot_fs=ext4\0" \
-+	"set_mmcroot=env set kernel_mmcroot root=${mmcroot} rootwait rw rootfstype=${rootfstype}\0" \
-+	EMMC_ENV\
-+	"mmcargs=env run set_mmcroot; env run set_kernel_console; setenv bootargs ${kernel_console} " \
-+		"${kernel_opt_args} " \
-+		"${kernel_mmcroot}\0" \
- 	"bootscript=echo Running bootscript from mmc ...; " \
- 		"source\0" \
+-	"bootscript=echo Running bootscript from mmc ...; " \
+-		"source\0" \
 -	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 -	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
- 	"mmcboot=echo Booting from mmc ...; " \
- 		"run mmcargs; " \
- 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+-	"mmcboot=echo Booting from mmc ...; " \
+-		"run mmcargs; " \
+-		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 -			"if run loadfdt; then " \
-+			"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${fdt_addr} ${fdt_file}; then " \
- 				"bootz ${loadaddr} - ${fdt_addr}; " \
- 			"else " \
- 				"if test ${boot_fdt} = try; then " \
-@@ -169,17 +165,20 @@
- 		"else " \
- 			"bootz; " \
- 		"fi;\0" \
+-				"bootz ${loadaddr} - ${fdt_addr}; " \
+-			"else " \
+-				"if test ${boot_fdt} = try; then " \
+-					"bootz; " \
+-				"else " \
+-					"echo WARN: Cannot load the DT; " \
+-				"fi; " \
+-			"fi; " \
+-		"else " \
+-			"bootz; " \
+-		"fi;\0" \
 -	"netargs=setenv bootargs console=${console},${baudrate} " \
 -		"root=/dev/nfs " \
 -		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
-+        "nfsopts=nolock,v3,tcp\0" \
-+        "netargs=env run set_kernel_console; setenv bootargs ${kernel_console} " \
-+                "${kernel_opt_args} " \
-+                "root=/dev/nfs " \
-+                "nfsroot=${rootpath},${nfsopts} rw " \
-+                "ip=dhcp\0" \
- 	"netboot=echo Booting from net ...; " \
+-	"netboot=echo Booting from net ...; " \
 -		"run netargs; " \
- 		"if test ${ip_dyn} = yes; then " \
- 			"setenv get_cmd dhcp; " \
- 		"else " \
- 			"setenv get_cmd tftp; " \
- 		"fi; " \
+-		"if test ${ip_dyn} = yes; then " \
+-			"setenv get_cmd dhcp; " \
+-		"else " \
+-			"setenv get_cmd tftp; " \
+-		"fi; " \
 -		"${get_cmd} ${image}; " \
-+		"${get_cmd} ; " \
-+		"run netargs; " \
- 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
- 			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
- 				"bootz ${loadaddr} - ${fdt_addr}; " \
-@@ -195,12 +194,12 @@
- 		"fi;\0"
+-		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+-			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
+-				"bootz ${loadaddr} - ${fdt_addr}; " \
+-			"else " \
+-				"if test ${boot_fdt} = try; then " \
+-					"bootz; " \
+-				"else " \
+-					"echo WARN: Cannot load the DT; " \
+-				"fi; " \
+-			"fi; " \
+-		"else " \
+-			"bootz; " \
+-		"fi;\0"
++	ENV_SCAN_SETTINGS \
++	FILE_LOADER
  
  #define CONFIG_BOOTCOMMAND \
 -	"mmc dev ${mmcdev};" \
 -	"if mmc rescan; then " \
 -		"if run loadbootscript; then " \
-+	"mmc dev ${mmc_os_boot_dev} ${mmc_os_boot_epart};" \
-+	"if mmc rescan && ${try_mmc_boot}; then " \
-+		"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${script}; then " \
- 		"run bootscript; " \
- 		"else " \
+-		"run bootscript; " \
+-		"else " \
 -			"if run loadimage; then " \
-+			"if ${boot_fs}load mmc ${mmc_os_boot_dev}:${mmc_os_boot_part} ${loadaddr} ${bootfile}; then " \
- 				"run mmcboot; " \
- 			"else run netboot; " \
- 			"fi; " \
-@@ -214,7 +213,7 @@
+-				"run mmcboot; " \
+-			"else run netboot; " \
+-			"fi; " \
+-		"fi; " \
+-	"else run netboot; fi"
++	"mw ${loadaddr} 0x00 1024; " \
++	"run loader; " \
++	"usb stop" \
++	"source; " \
++	"usb start" \
++	"echo ${target} not found!; " \
++	"printenv"
+ 
+ #define CONFIG_ARP_TIMEOUT     200UL
+ 
+ /* Miscellaneous configurable options */
++//#define CONFIG_ENV_VARS_UBOOT_CONFIG
++#define CONFIG_FIT
+ #define CONFIG_SYS_LONGHELP
++#define CONFIG_SYS_PROMPT               "U-Boot=> "
  #define CONFIG_SYS_HUSH_PARSER
  #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
  #define CONFIG_AUTO_COMPLETE
 -#define CONFIG_SYS_CBSIZE              256
-+#define CONFIG_SYS_CBSIZE              512
++#define CONFIG_SYS_CBSIZE              1024
  
  /* Print Buffer Size */
  #define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
 diff --git a/include/configs/mx6sabresd.h b/include/configs/mx6sabresd.h
-index e666ebb..c3e14b8 100644
+index e666ebb..e89d637 100644
 --- a/include/configs/mx6sabresd.h
 +++ b/include/configs/mx6sabresd.h
-@@ -15,13 +15,13 @@
+@@ -14,22 +14,28 @@
+ 
  #define CONFIG_MACH_TYPE	3980
  #define CONFIG_MXC_UART_BASE	UART1_BASE
- #define CONFIG_CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_CONSOLE_DEV		"ttymxc0"
 -#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
-+#define CONFIG_MMCROOT			"/dev/mmcblk0p2"
- #if defined(CONFIG_MX6Q)
- #define CONFIG_DEFAULT_FDT_FILE	"imx6q-sabresd.dtb"
- #elif defined(CONFIG_MX6DL)
- #define CONFIG_DEFAULT_FDT_FILE	"imx6dl-sabresd.dtb"
- #endif
+-#if defined(CONFIG_MX6Q)
+-#define CONFIG_DEFAULT_FDT_FILE	"imx6q-sabresd.dtb"
+-#elif defined(CONFIG_MX6DL)
+-#define CONFIG_DEFAULT_FDT_FILE	"imx6dl-sabresd.dtb"
+-#endif
 -#define PHYS_SDRAM_SIZE		(1u * 1024 * 1024 * 1024)
 +#define PHYS_SDRAM_SIZE		(2u * 1024 * 1024 * 1024)
  
  #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
  
-@@ -29,7 +29,8 @@
++/* USB Configs */
++#define CONFIG_CMD_USB
++#define CONFIG_USB_EHCI
++#define CONFIG_USB_EHCI_MX6
++#define CONFIG_USB_STORAGE
++#define CONFIG_USB_MAX_CONTROLLER_COUNT 2
++#define CONFIG_EHCI_HCD_INIT_AFTER_RESET        /* For OTG port */
++#define CONFIG_MXC_USB_PORTSC   (PORT_PTS_UTMI | PORT_PTS_PTW)
++#define CONFIG_MXC_USB_FLAGS    0
++#define CONFIG_USB_KEYBOARD
++#define CONFIG_SYS_USB_EVENT_POLL_VIA_CONTROL_EP
++
+ #include "mx6sabre_common.h"
  
  #define CONFIG_SYS_FSL_USDHC_NUM	3
  #if defined(CONFIG_ENV_IS_IN_MMC)
@@ -232,3 +272,20 @@ index e666ebb..c3e14b8 100644
  #endif
  
  /* Framebuffer */
+@@ -48,6 +54,7 @@
+ #define CONFIG_IPUV3_CLK 260000000
+ #define CONFIG_IMX_HDMI
+ #define CONFIG_IMX_VIDEO_SKIP
++#define CONFIG_CMD_HDMIDETECT
+ 
+ #define CONFIG_CMD_PCI
+ #ifdef CONFIG_CMD_PCI
+@@ -55,8 +62,6 @@
+ #define CONFIG_PCI_PNP
+ #define CONFIG_PCI_SCAN_SHOW
+ #define CONFIG_PCIE_IMX
+-#define CONFIG_PCIE_IMX_PERST_GPIO	IMX_GPIO_NR(7, 12)
+-#define CONFIG_PCIE_IMX_POWER_GPIO	IMX_GPIO_NR(3, 19)
+ #endif
+ 
+ /* I2C Configs */
