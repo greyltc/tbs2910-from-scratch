@@ -39,7 +39,7 @@ index 5cf0583..64cb78f 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..ad19004 100644
+index e59a3b4..08363db 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -51,6 +51,8 @@
@@ -60,9 +60,12 @@ index e59a3b4..ad19004 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
-@@ -94,127 +96,70 @@
+@@ -92,129 +94,90 @@
+ #define CONFIG_CMD_SETEXPR
+ #undef CONFIG_CMD_IMLS
  
- #define CONFIG_BOOTDELAY               1
+-#define CONFIG_BOOTDELAY               1
++#define CONFIG_BOOTDELAY               4
  
 -#define CONFIG_LOADADDR                        0x12000000
 +#define CONFIG_LOADADDR                        0x18000000
@@ -97,14 +100,25 @@ index e59a3b4..ad19004 100644
 +#define ENV_MISC_SETTINGS \
 +	"fdt_high=0xffffffff\0"
 +
++#define ENV_BOOTMENU_SETTINGS \
++	"itemA=echo 1 chosen!\0" \
++	"itemB=echo 2 chosen!\0" \
++	"itemC=echo 3 chosen!\0" \
++	"itemD=echo 4 chosen!\0"
++
 +#define CONFIG_PREBOOT \
-+        "setenv autoload no; " \
++	"setenv autoload no; " \
 +	"usb start; " \
 +	"mmc rescan; " \
-+        "if dhcp; then setenv nc ,nc; fi; " \
-+        "setenv stdin serial${nc},vga,usbkbd; " \
-+        "setenv stdout serial${nc},vga; " \
-+        "setenv stderr serial${nc},vga; "
++	"if dhcp; then setenv nc ,nc; fi; " \
++	"setenv stdin serial${nc},vga,usbkbd; " \
++	"setenv stdout serial${nc},vga; " \
++	"setenv stderr serial${nc},vga; " \
++	"setenv bootmenu_0 Default: Boot 1.=run itemA;" \
++	"setenv bootmenu_1 \"Boot 1.=setenv bootmenu_0 Default: Boot 1.=run itemA; saveenv; run itemA;\";" \
++	"setenv bootmenu_2 \"Boot 2.=setenv bootmenu_0 Default: Boot 2.=run itemB; saveenv; run itemB;\";" \
++	"setenv bootmenu_3 \"Boot 3.=setenv bootmenu_0 Default: Boot 3.=run itemC; saveenv; run itemC;\";" \
++	"setenv bootmenu_4 \"Boot 4.=setenv bootmenu_0 Default: Boot 4.=run itemD; saveenv; run itemD;\";"
 +
 +#define ENV_SCAN_SETTINGS \
 +        "target=boot.scr\0" \
@@ -201,6 +215,7 @@ index e59a3b4..ad19004 100644
 -		"fi;\0"
 +	ENV_SCAN_SETTINGS \
 +	ENV_MISC_SETTINGS \
++	ENV_BOOTMENU_SETTINGS \
 +	FILE_LOADER
  
  #define CONFIG_BOOTCOMMAND \
@@ -235,6 +250,12 @@ index e59a3b4..ad19004 100644
  #define CONFIG_AUTO_COMPLETE
 -#define CONFIG_SYS_CBSIZE              256
 +#define CONFIG_SYS_CBSIZE              1024
++
++/* Boot menu */
++#define CONFIG_CMD_BOOTMENU
++#define CONFIG_MENU
++#define CONFIG_AUTOBOOT_KEYED
++#define CONFIG_MENU_SHOW
  
  /* Print Buffer Size */
  #define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
