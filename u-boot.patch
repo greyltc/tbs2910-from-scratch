@@ -39,7 +39,7 @@ index 5cf0583..64cb78f 100644
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
  Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..e7436e5 100644
+index e59a3b4..ad19004 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
 @@ -51,6 +51,8 @@
@@ -60,8 +60,12 @@ index e59a3b4..e7436e5 100644
  
  #define CONFIG_PHYLIB
  #define CONFIG_PHY_ATHEROS
-@@ -97,124 +99,63 @@
- #define CONFIG_LOADADDR                        0x12000000
+@@ -94,127 +96,70 @@
+ 
+ #define CONFIG_BOOTDELAY               1
+ 
+-#define CONFIG_LOADADDR                        0x12000000
++#define CONFIG_LOADADDR                        0x18000000
  #define CONFIG_SYS_TEXT_BASE           0x17800000
  
 -#ifdef CONFIG_SUPPORT_EMMC_BOOT
@@ -89,6 +93,9 @@ index e59a3b4..e7436e5 100644
 +#define CONFIG_CONSOLE_MUX
 +#define CONFIG_SYS_CONSOLE_IS_IN_ENV
 +#define CONFIG_NETCONSOLE
++
++#define ENV_MISC_SETTINGS \
++	"fdt_high=0xffffffff\0"
 +
 +#define CONFIG_PREBOOT \
 +        "setenv autoload no; " \
@@ -193,6 +200,7 @@ index e59a3b4..e7436e5 100644
 -			"bootz; " \
 -		"fi;\0"
 +	ENV_SCAN_SETTINGS \
++	ENV_MISC_SETTINGS \
 +	FILE_LOADER
  
  #define CONFIG_BOOTCOMMAND \
