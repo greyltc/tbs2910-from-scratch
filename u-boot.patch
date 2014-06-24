@@ -1,5 +1,5 @@
 diff --git a/arch/arm/include/asm/arch-mx6/imx-regs.h b/arch/arm/include/asm/arch-mx6/imx-regs.h
-index 1f19727..7d2976b 100644
+index a69a753..c7e289f 100644
 --- a/arch/arm/include/asm/arch-mx6/imx-regs.h
 +++ b/arch/arm/include/asm/arch-mx6/imx-regs.h
 @@ -83,7 +83,7 @@
@@ -27,258 +27,38 @@ index bb6c60b..4737c9d 100644
  DATA 4 0x021b001c 0x04088032
  DATA 4 0x021b001c 0x0408803A
 diff --git a/boards.cfg b/boards.cfg
-index 5cf0583..64cb78f 100644
+index dbee7f6..8e6def3 100644
 --- a/boards.cfg
 +++ b/boards.cfg
-@@ -327,6 +327,7 @@ Active  arm         armv7          mx6         freescale       mx6qsabreauto
+@@ -328,6 +328,7 @@ Active  arm         armv7          mx6         freescale       mx6qsabreauto
  Active  arm         armv7          mx6         freescale       mx6qsabreauto       mx6dlsabreauto                        mx6qsabreauto:IMX_CONFIG=board/freescale/mx6qsabreauto/mx6dl.cfg,MX6DL            Fabio Estevam <fabio.estevam@freescale.com>
  Active  arm         armv7          mx6         freescale       mx6sabresd          mx6dlsabresd                          mx6sabresd:IMX_CONFIG=board/boundary/nitrogen6x/nitrogen6dl.cfg,MX6DL                                                             Fabio Estevam <fabio.estevam@freescale.com>
  Active  arm         armv7          mx6         freescale       mx6sabresd          mx6qsabresd                           mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q                                                           Fabio Estevam <fabio.estevam@freescale.com>
 +Active  arm         armv7          mx6         freescale       mx6sabresd          tbs2910                               mx6sabresd:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MX6Q,DDR_MB=2048
  Active  arm         armv7          mx6         freescale       mx6slevk            mx6slevk                              mx6slevk:IMX_CONFIG=board/freescale/mx6slevk/imximage.cfg,MX6SL                                                                   Fabio Estevam <fabio.estevam@freescale.com>
- Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl                           gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=512                                                  Tim Harvey <tharvey@gateworks.com>
- Active  arm         armv7          mx6         gateworks       gw_ventana          gwventanadl1g                         gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6DL,DDR_MB=1024                                                 Tim Harvey <tharvey@gateworks.com>
-diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index e59a3b4..08363db 100644
---- a/include/configs/mx6sabre_common.h
-+++ b/include/configs/mx6sabre_common.h
-@@ -51,6 +51,8 @@
- #define CONFIG_GENERIC_MMC
- #define CONFIG_BOUNCE_BUFFER
- #define CONFIG_CMD_EXT2
-+#define CONFIG_CMD_EXT4
-+#define CONFIG_EFI_PARTITION
- #define CONFIG_CMD_FAT
- #define CONFIG_DOS_PARTITION
- 
-@@ -63,7 +65,7 @@
- #define IMX_FEC_BASE			ENET_BASE_ADDR
- #define CONFIG_FEC_XCV_TYPE		RGMII
- #define CONFIG_ETHPRIME			"FEC"
--#define CONFIG_FEC_MXC_PHYADDR		1
-+#define CONFIG_FEC_MXC_PHYADDR		4
- 
- #define CONFIG_PHYLIB
- #define CONFIG_PHY_ATHEROS
-@@ -92,129 +94,90 @@
- #define CONFIG_CMD_SETEXPR
- #undef CONFIG_CMD_IMLS
- 
--#define CONFIG_BOOTDELAY               1
-+#define CONFIG_BOOTDELAY               4
- 
--#define CONFIG_LOADADDR                        0x12000000
-+#define CONFIG_LOADADDR                        0x18000000
- #define CONFIG_SYS_TEXT_BASE           0x17800000
- 
--#ifdef CONFIG_SUPPORT_EMMC_BOOT
--#define EMMC_ENV \
--	"emmcdev=2\0" \
--	"update_emmc_firmware=" \
--		"if test ${ip_dyn} = yes; then " \
--			"setenv get_cmd dhcp; " \
--		"else " \
--			"setenv get_cmd tftp; " \
--		"fi; " \
--		"if ${get_cmd} ${update_sd_firmware_filename}; then " \
--			"if mmc dev ${emmcdev} && " \
--				"mmc open ${emmcdev} 1; then "	\
--				"setexpr fw_sz ${filesize} / 0x200; " \
--				"setexpr fw_sz ${fw_sz} + 1; "	\
--				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
--				"mmc close ${emmcdev} 1; " \
--			"fi; "	\
--		"fi\0"
--#else
--#define EMMC_ENV ""
--#endif
-+//Console setup
-+#define CONFIG_CONSOLE_MUX
-+#define CONFIG_SYS_CONSOLE_IS_IN_ENV
-+#define CONFIG_NETCONSOLE
-+
-+#define ENV_MISC_SETTINGS \
-+	"fdt_high=0xffffffff\0"
-+
-+#define ENV_BOOTMENU_SETTINGS \
-+	"itemA=echo 1 chosen!\0" \
-+	"itemB=echo 2 chosen!\0" \
-+	"itemC=echo 3 chosen!\0" \
-+	"itemD=echo 4 chosen!\0"
-+
-+#define CONFIG_PREBOOT \
-+	"setenv autoload no; " \
-+	"usb start; " \
-+	"mmc rescan; " \
-+	"if dhcp; then setenv nc ,nc; fi; " \
-+	"setenv stdin serial${nc},vga,usbkbd; " \
-+	"setenv stdout serial${nc},vga; " \
-+	"setenv stderr serial${nc},vga; " \
-+	"setenv bootmenu_0 Default: Boot 1.=run itemA;" \
-+	"setenv bootmenu_1 \"Boot 1.=setenv bootmenu_0 Default: Boot 1.=run itemA; saveenv; run itemA;\";" \
-+	"setenv bootmenu_2 \"Boot 2.=setenv bootmenu_0 Default: Boot 2.=run itemB; saveenv; run itemB;\";" \
-+	"setenv bootmenu_3 \"Boot 3.=setenv bootmenu_0 Default: Boot 3.=run itemC; saveenv; run itemC;\";" \
-+	"setenv bootmenu_4 \"Boot 4.=setenv bootmenu_0 Default: Boot 4.=run itemD; saveenv; run itemD;\";"
-+
-+#define ENV_SCAN_SETTINGS \
-+        "target=boot.scr\0" \
-+        "busses_to_scan=tftp usb mmc\0" \
-+        "filesystems_to_scan=ext4 fat\0" \
-+        "devices_to_scan=0 1 2 3\0" \
-+        "device_regions_to_scan=0 1 2 3\0" \
-+        "fs_partitions_to_scan=1 2 3\0"
-+
-+#define FILE_LOADER \
-+	"loader=echo Scanning for ${target}...;" \
-+        "for dtype in ${busses_to_scan}; do " \
-+                "if test ${dtype} = tftp && test ${nc} = ,nc; then " \
-+                        "echo ${dtype}; " \
-+                        "if ${dtype} ${target}; then " \
-+                                "echo ${target} found!; " \
-+                        "fi; " \
-+                "fi; " \
-+        "done\0"
- 
- #define CONFIG_EXTRA_ENV_SETTINGS \
--	"script=boot.scr\0" \
--	"image=zImage\0" \
--	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
--	"fdt_addr=0x18000000\0" \
--	"boot_fdt=try\0" \
--	"ip_dyn=yes\0" \
--	"console=" CONFIG_CONSOLE_DEV "\0" \
--	"fdt_high=0xffffffff\0"	  \
--	"initrd_high=0xffffffff\0" \
--	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
--	"mmcpart=1\0" \
--	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
--	"update_sd_firmware=" \
--		"if test ${ip_dyn} = yes; then " \
--			"setenv get_cmd dhcp; " \
--		"else " \
--			"setenv get_cmd tftp; " \
--		"fi; " \
--		"if mmc dev ${mmcdev}; then "	\
--			"if ${get_cmd} ${update_sd_firmware_filename}; then " \
--				"setexpr fw_sz ${filesize} / 0x200; " \
--				"setexpr fw_sz ${fw_sz} + 1; "	\
--				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
--			"fi; "	\
--		"fi\0" \
--	EMMC_ENV	  \
--	"mmcargs=setenv bootargs console=${console},${baudrate} " \
--		"root=${mmcroot}\0" \
--	"loadbootscript=" \
--		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
--	"bootscript=echo Running bootscript from mmc ...; " \
--		"source\0" \
--	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
--	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
--	"mmcboot=echo Booting from mmc ...; " \
--		"run mmcargs; " \
--		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
--			"if run loadfdt; then " \
--				"bootz ${loadaddr} - ${fdt_addr}; " \
--			"else " \
--				"if test ${boot_fdt} = try; then " \
--					"bootz; " \
--				"else " \
--					"echo WARN: Cannot load the DT; " \
--				"fi; " \
--			"fi; " \
--		"else " \
--			"bootz; " \
--		"fi;\0" \
--	"netargs=setenv bootargs console=${console},${baudrate} " \
--		"root=/dev/nfs " \
--		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
--	"netboot=echo Booting from net ...; " \
--		"run netargs; " \
--		"if test ${ip_dyn} = yes; then " \
--			"setenv get_cmd dhcp; " \
--		"else " \
--			"setenv get_cmd tftp; " \
--		"fi; " \
--		"${get_cmd} ${image}; " \
--		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
--			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
--				"bootz ${loadaddr} - ${fdt_addr}; " \
--			"else " \
--				"if test ${boot_fdt} = try; then " \
--					"bootz; " \
--				"else " \
--					"echo WARN: Cannot load the DT; " \
--				"fi; " \
--			"fi; " \
--		"else " \
--			"bootz; " \
--		"fi;\0"
-+	ENV_SCAN_SETTINGS \
-+	ENV_MISC_SETTINGS \
-+	ENV_BOOTMENU_SETTINGS \
-+	FILE_LOADER
- 
- #define CONFIG_BOOTCOMMAND \
--	"mmc dev ${mmcdev};" \
--	"if mmc rescan; then " \
--		"if run loadbootscript; then " \
--		"run bootscript; " \
--		"else " \
--			"if run loadimage; then " \
--				"run mmcboot; " \
--			"else run netboot; " \
--			"fi; " \
--		"fi; " \
--	"else run netboot; fi"
-+	"mw ${loadaddr} 0x00 1024; " \
-+	"run loader; " \
-+	"usb stop" \
-+	"source; " \
-+	"usb start" \
-+	"echo ${target} not found!; " \
-+	"printenv"
- 
- #define CONFIG_ARP_TIMEOUT     200UL
- 
- /* Miscellaneous configurable options */
-+//#define CONFIG_ENV_VARS_UBOOT_CONFIG
-+#define CONFIG_FIT
- #define CONFIG_SYS_LONGHELP
-+#define CONFIG_SYS_PROMPT               "U-Boot=> "
- #define CONFIG_SYS_HUSH_PARSER
- #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
- #define CONFIG_AUTO_COMPLETE
--#define CONFIG_SYS_CBSIZE              256
-+#define CONFIG_SYS_CBSIZE              1024
-+
-+/* Boot menu */
-+#define CONFIG_CMD_BOOTMENU
-+#define CONFIG_MENU
-+#define CONFIG_AUTOBOOT_KEYED
-+#define CONFIG_MENU_SHOW
- 
- /* Print Buffer Size */
- #define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
+ Active  arm         armv7          mx6         gateworks       gw_ventana          gwventana                            gw_ventana:IMX_CONFIG=board/gateworks/gw_ventana/gw_ventana.cfg,MX6QDL,SPL                                                  Tim Harvey <tharvey@gateworks.com>
+ Active  arm         armv7          mx6         solidrun        hummingboard        hummingboard_solo                     hummingboard:IMX_CONFIG=board/solidrun/hummingboard/solo.cfg,MX6S,DDR_MB=512                                                      Jon Nettleton <jon.nettleton@gmail.com>
 diff --git a/include/configs/mx6sabresd.h b/include/configs/mx6sabresd.h
-index e666ebb..e89d637 100644
+index e666ebb..4c52348 100644
 --- a/include/configs/mx6sabresd.h
 +++ b/include/configs/mx6sabresd.h
-@@ -14,22 +14,28 @@
+@@ -71,4 +71,6 @@
+ #define CONFIG_POWER_PFUZE100
+ #define CONFIG_POWER_PFUZE100_I2C_ADDR	0x08
  
- #define CONFIG_MACH_TYPE	3980
- #define CONFIG_MXC_UART_BASE	UART1_BASE
--#define CONFIG_CONSOLE_DEV		"ttymxc0"
--#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
--#if defined(CONFIG_MX6Q)
--#define CONFIG_DEFAULT_FDT_FILE	"imx6q-sabresd.dtb"
--#elif defined(CONFIG_MX6DL)
--#define CONFIG_DEFAULT_FDT_FILE	"imx6dl-sabresd.dtb"
--#endif
--#define PHYS_SDRAM_SIZE		(1u * 1024 * 1024 * 1024)
-+#define PHYS_SDRAM_SIZE		(2u * 1024 * 1024 * 1024)
- 
- #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
- 
++#include "tbs2910.h"
++
+ #endif                         /* __MX6QSABRESD_CONFIG_H */
+diff --git a/include/configs/tbs2910.h b/include/configs/tbs2910.h
+new file mode 100644
+index 0000000..2d66ea4
+--- /dev/null
++++ b/include/configs/tbs2910.h
+@@ -0,0 +1,115 @@
++
++#undef PHYS_SDRAM_SIZE
++#define PHYS_SDRAM_SIZE                (2u * 1024 * 1024 * 1024)
++
 +/* USB Configs */
 +#define CONFIG_CMD_USB
 +#define CONFIG_USB_EHCI
@@ -291,30 +71,102 @@ index e666ebb..e89d637 100644
 +#define CONFIG_USB_KEYBOARD
 +#define CONFIG_SYS_USB_EVENT_POLL_VIA_CONTROL_EP
 +
- #include "mx6sabre_common.h"
- 
- #define CONFIG_SYS_FSL_USDHC_NUM	3
- #if defined(CONFIG_ENV_IS_IN_MMC)
--#define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC3 */
-+#define CONFIG_SYS_MMC_ENV_DEV		2	/* SDHC3 */
-+#define CONFIG_SYS_MMC_ENV_PART		1
- #endif
- 
- /* Framebuffer */
-@@ -48,6 +54,7 @@
- #define CONFIG_IPUV3_CLK 260000000
- #define CONFIG_IMX_HDMI
- #define CONFIG_IMX_VIDEO_SKIP
 +#define CONFIG_CMD_HDMIDETECT
- 
- #define CONFIG_CMD_PCI
- #ifdef CONFIG_CMD_PCI
-@@ -55,8 +62,6 @@
- #define CONFIG_PCI_PNP
- #define CONFIG_PCI_SCAN_SHOW
- #define CONFIG_PCIE_IMX
--#define CONFIG_PCIE_IMX_PERST_GPIO	IMX_GPIO_NR(7, 12)
--#define CONFIG_PCIE_IMX_POWER_GPIO	IMX_GPIO_NR(3, 19)
- #endif
- 
- /* I2C Configs */
++
++#undef CONFIG_SYS_MMC_ENV_DEV
++#define CONFIG_SYS_MMC_ENV_DEV 2
++#define CONFIG_SYS_MMC_ENV_PART 1
++
++/* Boot menu */
++#define CONFIG_CMD_BOOTMENU
++#define CONFIG_MENU
++#define CONFIG_AUTOBOOT_KEYED
++#define CONFIG_MENU_SHOW
++
++#undef CONFIG_SYS_CBSIZE
++#define CONFIG_SYS_CBSIZE 1024
++
++#define CONFIG_SYS_PROMPT               "U-Boot=> "
++#define CONFIG_FIT
++
++//#define CONFIG_ENV_VARS_UBOOT_CONFIG
++
++#undef CONFIG_BOOTCOMMAND
++#define CONFIG_BOOTCOMMAND \
++	"mw ${loadaddr} 0x00 1024; " \
++	"run loader; " \
++	"usb stop" \
++	"source; " \
++	"usb start" \
++	"echo ${target} not found!; " \
++	"printenv"
++
++#undef CONFIG_EXTRA_ENV_SETTINGS
++#define CONFIG_EXTRA_ENV_SETTINGS \
++	ENV_SCAN_SETTINGS \
++	ENV_MISC_SETTINGS \
++	ENV_BOOTMENU_SETTINGS \
++	FILE_LOADER
++
++#define CONFIG_CMD_EXT4
++#define CONFIG_EFI_PARTITION
++
++#undef CONFIG_FEC_MXC_PHYADDR
++#define CONFIG_FEC_MXC_PHYADDR 4
++
++#undef CONFIG_BOOTDELAY
++#define CONFIG_BOOTDELAY 4
++
++#undef CONFIG_LOADADDR
++#define CONFIG_LOADADDR 0x18000000
++
++#undef EMMC_ENV
++
++//Console setup
++#define CONFIG_CONSOLE_MUX
++#define CONFIG_SYS_CONSOLE_IS_IN_ENV
++#define CONFIG_NETCONSOLE
++
++#define ENV_MISC_SETTINGS \
++       "fdt_high=0xffffffff\0"
++
++#define ENV_BOOTMENU_SETTINGS \
++       "itemA=echo 1 chosen!\0" \
++       "itemB=echo 2 chosen!\0" \
++       "itemC=echo 3 chosen!\0" \
++       "itemD=echo 4 chosen!\0"
++
++#define CONFIG_PREBOOT \
++       "setenv autoload no; " \
++       "usb start; " \
++       "mmc rescan; " \
++       "if dhcp; then setenv nc ,nc; fi; " \
++       "setenv stdin serial${nc},vga,usbkbd; " \
++       "setenv stdout serial${nc},vga; " \
++       "setenv stderr serial${nc},vga; " \
++       "setenv bootmenu_0 Default: Boot 1.=run itemA;" \
++       "setenv bootmenu_1 \"Boot 1.=setenv bootmenu_0 Default: Boot 1.=run itemA; saveenv; run itemA;\";" \
++       "setenv bootmenu_2 \"Boot 2.=setenv bootmenu_0 Default: Boot 2.=run itemB; saveenv; run itemB;\";" \
++       "setenv bootmenu_3 \"Boot 3.=setenv bootmenu_0 Default: Boot 3.=run itemC; saveenv; run itemC;\";" \
++       "setenv bootmenu_4 \"Boot 4.=setenv bootmenu_0 Default: Boot 4.=run itemD; saveenv; run itemD;\";"
++
++#define ENV_SCAN_SETTINGS \
++        "target=boot.scr\0" \
++        "busses_to_scan=tftp usb mmc\0" \
++        "filesystems_to_scan=ext4 fat\0" \
++        "devices_to_scan=0 1 2 3\0" \
++        "device_regions_to_scan=0 1 2 3\0" \
++        "fs_partitions_to_scan=1 2 3\0"
++
++#define FILE_LOADER \
++       "loader=echo Scanning for ${target}...;" \
++        "for dtype in ${busses_to_scan}; do " \
++                "if test ${dtype} = tftp && test ${nc} = ,nc; then " \
++                        "echo ${dtype}; " \
++                        "if ${dtype} ${target}; then " \
++                                "echo ${target} found!; " \
++                        "fi; " \
++                "fi; " \
++        "done\0"
++
++
