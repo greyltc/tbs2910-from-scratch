@@ -1,7 +1,7 @@
 tbs2910-from-scratch
 ===============
 
-Everything you need under one roof to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer:  
+Everything you need under one roof to get Debian Sid, and a bleeding edge kernel and u-boot running on your TBS2910 single board computer (I own v1.3 of the hardware so I can't test anything else):  
 1. [Wiki containing instructions](https://github.com/l3iggs/tbs2910-from-scratch/wiki)  
 2. [u-boot patch](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/u-boot.patch)   
 3. [Kernel config fragment](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/matrix.cfg) and [patch](https://raw.githubusercontent.com/l3iggs/tbs2910-from-scratch/master/linux.patch)  
